@@ -1,0 +1,19 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/users/customMe",
+      "handler": "User.customMe",
+      "config": {
+        "policies": [],
+        "prefix": "",
+        "description": "Retrieve the logged in user information",
+        "tag": {
+          "plugin": "users-permissions",
+          "name": "User",
+          "actionType": "findOne"
+        }
+      }
+    }
+  ]
+}

@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "course_videos",
   "info": {
-    "name": "CourseVideo"
+    "name": "CourseVideo",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -19,10 +20,15 @@
     },
     "mux_asset": {
       "plugin": "mux-video-uploader",
-      "collection": "mux-asset"
+      "model": "mux-asset"
     },
     "uuid": {
       "type": "uid"
+    },
+    "users_finished": {
+      "plugin": "users-permissions",
+      "collection": "user",
+      "via": "course_video_finished"
     }
   }
 }

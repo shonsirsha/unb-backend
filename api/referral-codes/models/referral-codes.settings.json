@@ -19,9 +19,9 @@
       "type": "uid"
     },
     "users": {
+      "via": "referral_code",
       "plugin": "users-permissions",
-      "collection": "user",
-      "via": "referral_code"
+      "collection": "user"
     }
   }
 }

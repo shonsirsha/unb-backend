@@ -77,13 +77,18 @@
       "required": false,
       "pluginOptions": {}
     },
-    "course": {
+    "courses": {
+      "collection": "courses",
       "via": "paid_users",
-      "model": "courses"
+      "dominant": true
     },
     "referral_code": {
       "via": "users",
       "model": "referral-codes"
+    },
+    "course_video_finished": {
+      "via": "users_finished",
+      "model": "course-video"
     }
   }
 }
