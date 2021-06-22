@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "content_creators",
+  "info": {
+    "name": "ContentCreators",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "full_name": {
+      "type": "string"
+    },
+    "uuid": {
+      "type": "uid"
+    },
+    "courses": {
+      "via": "content_creator",
+      "collection": "courses"
+    }
+  }
+}

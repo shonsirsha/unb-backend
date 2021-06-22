@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "courses",
+  "info": {
+    "name": "Courses",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "poster": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "uuid": {
+      "type": "uid"
+    },
+    "course_videos": {
+      "collection": "course-video"
+    },
+    "paid_users": {
+      "plugin": "users-permissions",
+      "collection": "user",
+      "via": "course"
+    },
+    "content_creator": {
+      "model": "content-creators",
+      "via": "courses"
+    }
+  }
+}

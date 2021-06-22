@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "referral_codes",
+  "info": {
+    "name": "ReferralCodes",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "code": {
+      "type": "string"
+    },
+    "uuid": {
+      "type": "uid"
+    },
+    "users": {
+      "plugin": "users-permissions",
+      "collection": "user",
+      "via": "referral_code"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "course_videos",
+  "info": {
+    "name": "CourseVideo"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "mux_asset": {
+      "plugin": "mux-video-uploader",
+      "collection": "mux-asset"
+    },
+    "uuid": {
+      "type": "uid"
+    }
+  }
+}
