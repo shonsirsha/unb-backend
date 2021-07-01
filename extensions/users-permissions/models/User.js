@@ -14,7 +14,6 @@ module.exports = {
         { id: data.id },
         {
           uuid: user_uuid,
-          username: Date.now(),
         }
       );
     },
