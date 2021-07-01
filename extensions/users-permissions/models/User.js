@@ -2,22 +2,25 @@ const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
   lifecycles: {
-    async beforeCreate(data) {
-      data.username = uuidv4();
-    },
+    async beforeCreate(data) {},
     async create() {
       console.log("asd");
     },
     async afterCreate(data) {
-      console.log(data);
-      //todo to  edit and add Full Name
-      const user_uuid = uuidv4();
-      await strapi.plugins["users-permissions"].services.user.edit(
-        { id: data.id },
-        {
-          uuid: user_uuid,
-        }
-      );
+      try {
+        //todo to  edit and add Full Name
+        const user_uuid = uuidv4();
+        await strapi.plugins["users-permissions"].services.user.edit(
+          { id: data.id },
+          {
+            uuid: user_uuid,
+            username: user_uuid,
+          }
+        );
+      } catch (e) {
+        console.log("GAGALLLLLLL");
+        console.log(e);
+      }
     },
   },
 };
