@@ -62,17 +62,10 @@
     "uuid": {
       "type": "uid"
     },
-    "full_name": {
-      "type": "string"
-    },
     "profile_picture": {
       "model": "file",
       "via": "related",
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos"
-      ],
+      "allowedTypes": ["images", "files", "videos"],
       "plugin": "upload",
       "required": false,
       "pluginOptions": {}
@@ -89,6 +82,16 @@
     "course_video_finished": {
       "via": "users_finished",
       "model": "course-video"
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "onboarded": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

@@ -26,9 +26,9 @@
       "type": "uid"
     },
     "users_finished": {
+      "via": "course_video_finished",
       "plugin": "users-permissions",
-      "collection": "user",
-      "via": "course_video_finished"
+      "collection": "user"
     }
   }
 }
