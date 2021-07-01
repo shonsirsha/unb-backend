@@ -2,7 +2,9 @@ const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
   lifecycles: {
-    async beforeCreate(data) {},
+    async beforeCreate(data) {
+      data.username = uuidv4();
+    },
     async create() {
       console.log("asd");
     },
