@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_asd_day_titles",
+  "info": {
+    "name": "Day Title",
+    "icon": "ad",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    }
+  }
+}

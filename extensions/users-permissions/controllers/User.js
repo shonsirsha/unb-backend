@@ -116,15 +116,7 @@ module.exports = {
 
 const getCourseVideosFromByCourseId = (myArray) => {
   const promises = myArray.map(async (course) => {
-    const coursesAPI = await strapi
-      .query("courses")
-      .findOne({ id: course.id }, ["course_videos", "course_videos.mux_asset"]);
-
-    if (coursesAPI.paid_users) {
-      // removes paid_users from courses
-      delete coursesAPI.paid_users;
-    }
-    course.course_videos = coursesAPI.course_videos; // assign all the courses from "courses" to the user course's object (course) as course_videos
+    // course.course_videos = coursesAPI.course_videos; // assign all the courses from "courses" to the user course's object (course) as course_videos
     return course;
   });
   return Promise.all(promises);

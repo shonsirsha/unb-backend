@@ -65,23 +65,18 @@
     "profile_picture": {
       "model": "file",
       "via": "related",
-      "allowedTypes": ["images", "files", "videos"],
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
       "plugin": "upload",
       "required": false,
       "pluginOptions": {}
     },
-    "courses": {
-      "collection": "courses",
-      "via": "paid_users",
-      "dominant": true
-    },
     "referral_code": {
       "via": "users",
       "model": "referral-codes"
-    },
-    "course_video_finished": {
-      "via": "users_finished",
-      "model": "course-video"
     },
     "first_name": {
       "type": "string"
@@ -92,6 +87,10 @@
     "onboarded": {
       "type": "boolean",
       "default": false
+    },
+    "courses": {
+      "via": "paid_users",
+      "collection": "courses"
     }
   }
 }

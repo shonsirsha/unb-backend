@@ -30,9 +30,6 @@
     "uuid": {
       "type": "uid"
     },
-    "course_videos": {
-      "collection": "course-video"
-    },
     "content_creator": {
       "model": "content-creators",
       "via": "courses"
@@ -40,7 +37,19 @@
     "paid_users": {
       "via": "courses",
       "plugin": "users-permissions",
-      "collection": "user"
+      "collection": "user",
+      "dominant": true
+    },
+    "videos": {
+      "type": "component",
+      "repeatable": true,
+      "component": "videos.video"
+    },
+    "short_desc": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "decimal"
     }
   }
 }

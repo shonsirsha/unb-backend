@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_daytitle_daytitles",
+  "info": {
+    "name": "Days",
+    "icon": "adjust",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "videos": {
+      "collection": "course-video"
+    }
+  }
+}

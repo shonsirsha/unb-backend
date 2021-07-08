@@ -1,0 +1,10 @@
+const getCourseVideosFromByCourseId = (myArray) => {
+  const promises = myArray.map(async (course) => {
+    const coursesAPI = await strapi
+      .query("courses")
+      .findOne({ id: course.id }, ["daytitle", "daytitle.videos.mux_asset"]);
+    course.daytitle = coursesAPI.daytitle;
+    // course.course_videos = coursesAPI.course_videos; // assign all the courses from "courses" to the user course's object (course) as course_videos
+    return course;
+  });
+  return Promise.all(promises);

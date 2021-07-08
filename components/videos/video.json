@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_videos_videos",
+  "info": {
+    "name": "videos",
+    "icon": "address-book",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "day_title": {
+      "type": "string"
+    },
+    "video": {
+      "plugin": "mux-video-uploader",
+      "model": "mux-asset"
+    }
+  }
+}
