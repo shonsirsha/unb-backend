@@ -10,6 +10,22 @@
     },
     {
       "method": "GET",
+      "path": "/courses-not-taken",
+      "handler": "courses.findAllNotTaken",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/courses-taken",
+      "handler": "courses.findAllTaken",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/courses/count",
       "handler": "courses.count",
       "config": {

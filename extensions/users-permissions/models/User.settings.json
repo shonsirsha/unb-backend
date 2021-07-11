@@ -88,8 +88,12 @@
       "type": "boolean",
       "default": false
     },
-    "courses": {
+    "paid_courses": {
       "via": "paid_users",
+      "collection": "courses"
+    },
+    "enrolled_courses": {
+      "via": "enrolled_users",
       "collection": "courses"
     }
   }
