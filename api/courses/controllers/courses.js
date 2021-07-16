@@ -68,10 +68,8 @@ module.exports = {
         const v = el.enrolled_users.findIndex((el) => el.uuid === uuid);
         let shouldBeReturned = false;
         if (v > -1) {
-          console.log(el.title + " has been taken by user"); // this EL will be removed
           shouldBeReturned = false; // due to this
         } else {
-          console.log(el.title + " has NOT been taken by user");
           shouldBeReturned = true;
         }
         return shouldBeReturned;
@@ -114,10 +112,8 @@ module.exports = {
         const v = el.enrolled_users.findIndex((el) => el.uuid === uuid);
         let shouldBeReturned = false;
         if (v > -1) {
-          console.log(el.title + " has been taken by user");
           shouldBeReturned = true;
         } else {
-          console.log(el.title + " has NOT been taken by user"); // this EL will be removed
           shouldBeReturned = false; // due to this
         }
         return shouldBeReturned;

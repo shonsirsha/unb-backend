@@ -29,6 +29,22 @@ module.exports = {
     ctx.body = sanitizeUser(me);
   },
 
+  async me(ctx, req) {
+    let user = ctx.state.user;
+
+    // console.log(ctx.request.header);
+
+    if (!user) {
+      return ctx.badRequest(null, [
+        { messages: [{ id: "No authorization header was found" }] },
+      ]);
+    }
+
+    // user.token = ctx.request.header.authorization;
+
+    ctx.body = sanitizeUser(user);
+  },
+
   async updateMe(ctx) {
     const advancedConfigs = await strapi
       .store({
@@ -40,6 +56,7 @@ module.exports = {
       .get();
 
     const { id } = ctx.state.user;
+
     const { email, username, password } = ctx.request.body;
 
     const user = await strapi.plugins["users-permissions"].services.user.fetch({

@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_rating_ratings",
+  "info": {
+    "name": "rating",
+    "icon": "star",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "rate": {
+      "type": "integer"
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
+    }
+  }
+}

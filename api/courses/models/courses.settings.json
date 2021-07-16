@@ -49,9 +49,6 @@
       "type": "string",
       "maxLength": 64
     },
-    "rating": {
-      "type": "decimal"
-    },
     "enrolled_users": {
       "plugin": "users-permissions",
       "collection": "user",
@@ -61,6 +58,14 @@
     "slug": {
       "type": "uid",
       "targetField": "title"
+    },
+    "rating": {
+      "type": "component",
+      "repeatable": true,
+      "component": "rating.rating"
+    },
+    "total_rating": {
+      "type": "integer"
     }
   }
 }
