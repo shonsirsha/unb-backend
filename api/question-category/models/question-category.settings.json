@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "question_categories",
+  "info": {
+    "name": "QuestionCategory",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    }
+  }
+}
