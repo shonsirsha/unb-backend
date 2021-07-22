@@ -9,9 +9,6 @@
   "attributes": {
     "Title": {
       "type": "string"
-    },
-    "videos": {
-      "collection": "course-video"
     }
   }
 }

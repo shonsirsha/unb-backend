@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_paid_users_detail_paid_users_details",
+  "info": {
+    "name": "paid-users-detail",
+    "icon": "address-card"
+  },
+  "options": {},
+  "attributes": {
+    "date": {
+      "type": "date"
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
+    }
+  }
+}

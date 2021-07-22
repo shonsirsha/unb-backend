@@ -2,11 +2,13 @@
   "kind": "collectionType",
   "collectionName": "muxassets",
   "info": {
-    "name": "MuxAsset"
+    "name": "MuxAsset",
+    "description": ""
   },
   "options": {
     "increments": true,
-    "timestamps": true
+    "timestamps": true,
+    "draftAndPublish": false
   },
   "attributes": {
     "title": {
@@ -35,6 +37,10 @@
       "type": "boolean",
       "default": false,
       "required": false
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
     }
   }
 }

@@ -66,6 +66,11 @@
     },
     "total_rating": {
       "type": "integer"
+    },
+    "paid_users_detail": {
+      "type": "component",
+      "repeatable": true,
+      "component": "paid-users-detail.paid-users-detail"
     }
   }
 }

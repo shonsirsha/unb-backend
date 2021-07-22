@@ -11,9 +11,9 @@ module.exports = {
    *
    * @return {Promise}
    */
-  find(params, populate) {
-    return strapi
-      .query("courses")
-      .find(params, ["course_videos", "course_videos.mux_asset"]);
-  },
+  // find(params, populate) {
+  //   return strapi
+  //     .query("courses")
+  //     .find(params, ["course_videos", "course_videos.mux_asset"]);
+  // },
 };

@@ -12,6 +12,7 @@ module.exports = {
     if (ctx.query._q) {
       entities = await strapi.services.courses.search(ctx.query);
     } else {
+      console.log(ctx.query);
       entities = await strapi.services.courses.find(ctx.query);
     }
 
@@ -27,9 +28,12 @@ module.exports = {
       course.thumbnail = detailedCourse.poster.formats.thumbnail.url;
       course.num_of_participants = detailedCourse.enrolled_users.length;
       course.enrolled_users = detailedCourse.enrolled_users;
-      course.videos.map((vidEntity) => {
-        delete vidEntity.video;
-      });
+      if (!ctx.query.slug) {
+        course.videos.map((vidEntity) => {
+          delete vidEntity.video;
+        });
+      }
+
       return course;
     });
     return Promise.all(promises);
@@ -101,14 +105,14 @@ module.exports = {
       course.num_of_participants = detailedCourse.enrolled_users.length;
       course.enrolled_users = detailedCourse.enrolled_users;
 
-      course.videos.map((vidEntity) => {
-        delete vidEntity.video;
-      });
+      // course.videos.map((vidEntity) => {
+      //   delete vidEntity.video;
+      // });
       return course;
     });
     let formedArr = Promise.all(promises);
     formedArr = formedArr.then((r) => {
-      const cleanArr = r.filter((el, ix) => {
+      const cleanArr = r.filter((el, _) => {
         const v = el.enrolled_users.findIndex((el) => el.uuid === uuid);
         let shouldBeReturned = false;
         if (v > -1) {
