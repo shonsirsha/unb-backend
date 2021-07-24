@@ -86,12 +86,12 @@ module.exports = {
 
       if (userWithSameUsername && userWithSameUsername.id != id) {
         return ctx.badRequest(
-          null,
-          formatError({
-            id: "Auth.form.error.username.taken",
-            message: "username.alreadyTaken.",
-            field: ["username"],
-          })
+          null
+          // formatError({
+          //   id: "Auth.form.error.username.taken",
+          //   message: "username.alreadyTaken.",
+          //   field: ["username"],
+          // })
         );
       }
     }
@@ -103,12 +103,12 @@ module.exports = {
 
       if (userWithSameEmail && userWithSameEmail.id != id) {
         return ctx.badRequest(
-          null,
-          formatError({
-            id: "Auth.form.error.email.taken",
-            message: "Email already taken",
-            field: ["email"],
-          })
+          null
+          // formatError({
+          //   id: "Auth.form.error.email.taken",
+          //   message: "Email already taken",
+          //   field: ["email"],
+          // })
         );
       }
       ctx.request.body.email = ctx.request.body.email.toLowerCase();

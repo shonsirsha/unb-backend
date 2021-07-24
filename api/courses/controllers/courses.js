@@ -1,5 +1,6 @@
 "use strict";
 const { sanitizeEntity } = require("strapi-utils");
+const fetch = require("node-fetch");
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
@@ -7,6 +8,49 @@ const { sanitizeEntity } = require("strapi-utils");
  */
 
 module.exports = {
+  async xenditCb(ctx) {
+    //callback / hook - here it should update the user so that they done bought they class.
+    // console.log(ctx);
+    console.log(ctx.request.body);
+    console.log("HOLAHALUUU");
+    return {
+      message: "hi",
+    };
+  },
+  async xendit(ctx) {
+    console.log(ctx.request.body);
+    const { amount, external_id, payer_email, description, redirect_url } =
+      ctx.request.body;
+    //external_id is reference ID
+    const res = await fetch(`https://api.xendit.co/v2/invoices`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Basic " +
+          Buffer.from(`${process.env.XENDIT_API}:`).toString("base64"),
+      },
+      body: JSON.stringify({
+        external_id,
+        amount,
+        payer_email,
+        description,
+        failure_redirect_url: redirect_url,
+        success_redirect_url: redirect_url,
+      }),
+    });
+    const inv = await res.json();
+
+    if (!res.ok) {
+      return ctx.badRequest(null, {
+        message: inv.message,
+      });
+    } else {
+      return {
+        invoice_url: inv.invoice_url,
+      };
+    }
+  },
   async find(ctx) {
     let entities;
     if (ctx.query._q) {

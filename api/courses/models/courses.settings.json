@@ -71,6 +71,9 @@
       "type": "component",
       "repeatable": true,
       "component": "paid-users-detail.paid-users-detail"
+    },
+    "price": {
+      "type": "biginteger"
     }
   }
 }

@@ -9,6 +9,22 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/xendit",
+      "handler": "courses.xendit",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/xendit-callback",
+      "handler": "courses.xenditCb",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "GET",
       "path": "/courses-not-taken",
       "handler": "courses.findAllNotTaken",

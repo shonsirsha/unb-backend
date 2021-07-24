@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/waiting-payments",
+      "handler": "waiting-payment.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/waiting-payments/count",
+      "handler": "waiting-payment.count",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/waiting-payments/:id",
+      "handler": "waiting-payment.findOne",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/waiting-payments",
+      "handler": "waiting-payment.create",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/waiting-payments/:id",
+      "handler": "waiting-payment.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/waiting-payments/:id",
+      "handler": "waiting-payment.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

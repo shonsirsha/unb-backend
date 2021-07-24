@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "waiting_payments",
+  "info": {
+    "name": "waiting_payment"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "ex_id": {
+      "type": "string"
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user"
+    },
+    "course": {
+      "model": "courses"
+    }
+  }
+}
