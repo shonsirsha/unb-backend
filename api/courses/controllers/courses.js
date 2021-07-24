@@ -9,6 +9,12 @@ const fetch = require("node-fetch");
 
 module.exports = {
   async xenditCb(ctx) {
+    if (
+      ctx.request.header["x-callback-token"] !==
+      process.env.XENDIT_CALLBACK_TOKEN
+    ) {
+      return "Not Found";
+    }
     //callback / hook -
     //will be called automatically
     //from xendit after user has paid
@@ -127,8 +133,14 @@ module.exports = {
   },
   async xendit(ctx) {
     console.log(ctx.request.body);
-    const { amount, external_id, payer_email, description, redirect_url } =
-      ctx.request.body;
+    const {
+      amount,
+      external_id,
+      payer_email,
+      description,
+      redirect_url,
+      courseId,
+    } = ctx.request.body;
     //external_id is reference ID
     const res = await fetch(`https://api.xendit.co/v2/invoices`, {
       method: "POST",
@@ -154,6 +166,14 @@ module.exports = {
         message: inv.message,
       });
     } else {
+      const user = ctx.state.user;
+      await strapi.query("waiting-payment").create({
+        ex_id: external_id,
+        invoice_url: inv.invoice_url,
+        user,
+        course: { id: courseId },
+      });
+
       return {
         invoice_url: inv.invoice_url,
       };
