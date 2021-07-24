@@ -9,13 +9,121 @@ const fetch = require("node-fetch");
 
 module.exports = {
   async xenditCb(ctx) {
-    //callback / hook - here it should update the user so that they done bought they class.
-    // console.log(ctx);
-    console.log(ctx.request.body);
-    console.log("HOLAHALUUU");
-    return {
-      message: "hi",
-    };
+    //callback / hook -
+    //will be called automatically
+    //from xendit after user has paid
+
+    //callback method below will check if external_id and payer_email are valid
+    //and match each other.
+    //Both data will be checked against
+    //the saved data in the waiting-payment model
+
+    //if they are valid (exist and matching) then course model will be updated
+    //with new enrolled_users, paid_users, and paid_users_detail
+
+    console.log("callback called");
+    const { external_id, payer_email } = ctx.request.body;
+    const pendingPayment = await strapi
+      .query("waiting-payment")
+      .find({ ex_id: `${external_id}` });
+    if (pendingPayment.length > 0) {
+      console.log("pending payment found");
+
+      const { user, course } = pendingPayment[0];
+      const userEmailFromDb = user.email;
+
+      // get this exact course via a standalone query
+      // due to pendingPayment not returning enrolled_users[] and paid_users[]
+      //but it does return paid_users_detail[]
+      const exactCourse = await strapi.query("courses").find({ id: course.id });
+      const { paid_users, enrolled_users } = exactCourse[0];
+
+      // just for good measure
+      if (payer_email === userEmailFromDb) {
+        const updateCourse = await strapi.query("courses").update(
+          { id: course.id },
+          {
+            paid_users_detail: [
+              ...course.paid_users_detail,
+              { date: new Date(), user },
+            ],
+            paid_users: [...paid_users, user],
+            enrolled_users: [...enrolled_users, user],
+          }
+        );
+
+        if (Object.keys(updateCourse).length > 0) {
+          await strapi.query("waiting-payment").delete({ ex_id: external_id });
+          console.log("success");
+
+          return {
+            message: "ok",
+          };
+        } else {
+          console.log("Failed updating user and course upon payment");
+          return ctx.badRequest(null, {
+            message: "Failed updating user and course upon payment",
+          });
+        }
+      } else {
+        return ctx.badRequest(null, {
+          message: "not found",
+        });
+      }
+    } else {
+      return ctx.badRequest(null, {
+        message: "not found",
+      });
+    }
+  },
+  async xenditCbTest(ctx) {
+    const { payer_email, external_id } = ctx.request.body;
+    const pendingPayment = await strapi
+      .query("waiting-payment")
+      .find({ ex_id: `${external_id}` });
+    if (pendingPayment.length > 0) {
+      const { user, course } = pendingPayment[0];
+
+      // get this exact course via a standalone query
+      // due to pendingPayment not returning enrolled_users[] and paid_users[]
+      //but it does return paid_users_detail[]
+      const exactCourse = await strapi.query("courses").find({ id: course.id });
+      const { paid_users, enrolled_users } = exactCourse[0];
+
+      const userEmailFromDb = user.email;
+      // just for good measure
+      if (payer_email === userEmailFromDb) {
+        const updateCourse = await strapi.query("courses").update(
+          { id: course.id },
+          {
+            paid_users_detail: [
+              ...course.paid_users_detail,
+              { date: new Date(), user },
+            ],
+            paid_users: [...paid_users, user],
+            enrolled_users: [...enrolled_users, user],
+          }
+        );
+
+        if (Object.keys(updateCourse).length > 0) {
+          return {
+            message: "ok",
+          };
+        } else {
+          return ctx.badRequest(null, {
+            message: "Failed updating user and course upon payment",
+          });
+        }
+      } else {
+        return ctx.badRequest(null, {
+          message: "not found",
+        });
+      }
+    } else {
+      return ctx.badRequest(null, {
+        message: "not found",
+      });
+    }
   },
   async xendit(ctx) {
     console.log(ctx.request.body);
