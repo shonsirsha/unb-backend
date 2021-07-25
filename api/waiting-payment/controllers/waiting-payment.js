@@ -19,12 +19,16 @@ module.exports = {
     if (pendingPayment.length === 1) {
       const { created_at, invoice_url } = pendingPayment[0];
       const difference = calculateHourDifference(created_at, new Date());
-      if (difference <= 20) {
+      if (difference <= 22) {
         return {
           valid: true,
           invoice_url,
         }; // not expiring soon
       } else {
+        await strapi
+          .query("waiting-payment")
+          .delete({ "user.uuid": uuid, "course.id": courseId });
+
         return {
           valid: false,
           invoice_url: "",
