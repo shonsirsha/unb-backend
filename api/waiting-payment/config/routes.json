@@ -9,6 +9,14 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/waiting-payments/:id/me",
+      "handler": "waiting-payment.findOneByMeByCourse",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "GET",
       "path": "/waiting-payments/count",
       "handler": "waiting-payment.count",
