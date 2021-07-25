@@ -17,20 +17,23 @@ module.exports = {
       .query("waiting-payment")
       .find({ "user.uuid": uuid, "course.id": courseId });
     if (pendingPayment.length === 1) {
-      const { created_at } = pendingPayment[0];
+      const { created_at, invoice_url } = pendingPayment[0];
       const difference = calculateHourDifference(created_at, new Date());
       if (difference <= 20) {
         return {
           valid: true,
+          invoice_url,
         }; // not expiring soon
       } else {
         return {
           valid: false,
+          invoice_url: "",
         }; // expiring soon
       }
     } else {
       return {
         valid: false, // pending payment does not exist
+        invoice_url: "",
       };
     }
   },

@@ -10,7 +10,7 @@
     },
     {
       "method": "POST",
-      "path": "/waiting-payments/:id/me",
+      "path": "/waiting-payments/singular/me",
       "handler": "waiting-payment.findOneByMeByCourse",
       "config": {
         "policies": []

@@ -132,7 +132,9 @@ module.exports = {
     }
   },
   async xendit(ctx) {
-    console.log(ctx.request.body);
+    // this endpoint does:
+    //1 . Call xendit API to create a new invoice_url
+    //2. Create a new entry of waiting_payment with the corresponding: user, course, external_id, and invoice_url
     const {
       amount,
       external_id,
