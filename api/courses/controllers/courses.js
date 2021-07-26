@@ -183,14 +183,21 @@ module.exports = {
   },
   async find(ctx) {
     let entities;
+    let promises;
+    let course;
+    let loggedIn = false;
     if (ctx.query._q) {
       entities = await strapi.services.courses.search(ctx.query);
     } else {
-      console.log(ctx.query);
       entities = await strapi.services.courses.find(ctx.query);
     }
 
-    const promises = entities.map(async (entity) => {
+    if (ctx.state.user) {
+      // logged in / authed request
+      loggedIn = true;
+    }
+
+    promises = entities.map(async (entity) => {
       let course = sanitizeEntity(entity, {
         model: strapi.models.courses,
       });
@@ -201,15 +208,30 @@ module.exports = {
       course.content_creator = detailedCourse.content_creator;
       course.thumbnail = detailedCourse.poster.formats.thumbnail.url;
       course.num_of_participants = detailedCourse.enrolled_users.length;
-      course.enrolled_users = detailedCourse.enrolled_users;
       if (!ctx.query.slug) {
         course.videos.map((vidEntity) => {
           delete vidEntity.video;
         });
       }
+      course.rating.map((c) => {
+        delete c.user;
+      });
+      delete course.paid_users;
+      delete course.paid_users_detail;
+      delete course.poster;
+      if (loggedIn) {
+        const userEnrolled = course.enrolled_users.some((user) => {
+          return user.uuid === ctx.state.user.uuid;
+        });
+        course.enrolled = userEnrolled;
+      } else {
+        course.enrolled = false;
+      }
+      delete course.enrolled_users;
 
       return course;
     });
+
     return Promise.all(promises);
   },
 
@@ -238,6 +260,9 @@ module.exports = {
       course.videos.map((vidEntity) => {
         delete vidEntity.video;
       });
+      if (course.poster) delete course.poster;
+      delete course.paid_users;
+      delete course.paid_users_detail;
       return course;
     });
     let formedArr = Promise.all(promises);
@@ -258,46 +283,63 @@ module.exports = {
   },
 
   async findAllTaken(ctx) {
-    let entities;
-    if (ctx.query._q) {
-      entities = await strapi.services.courses.search(ctx.query);
-    } else {
-      entities = await strapi.services.courses.find(ctx.query);
-    }
     const { uuid } = ctx.state.user;
-
-    const promises = entities.map(async (entity) => {
+    const userCourses = await strapi
+      .query("courses")
+      .find({ "enrolled_users.uuid": uuid });
+    const userCourseFixed = userCourses.map(async (entity) => {
       let course = sanitizeEntity(entity, {
         model: strapi.models.courses,
       });
+      if (course.poster) delete course.poster;
       let detailedCourse = await strapi
         .query("courses")
-        .findOne({ id: course.id }); // this has 'detailed'/complete (but shallow) relationsF
+        .findOne({ id: course.id }); // this has 'detailed'/complete relations
       course.image = detailedCourse.poster.url;
       course.content_creator = detailedCourse.content_creator;
       course.thumbnail = detailedCourse.poster.formats.thumbnail.url;
       course.num_of_participants = detailedCourse.enrolled_users.length;
-      course.enrolled_users = detailedCourse.enrolled_users;
 
-      // course.videos.map((vidEntity) => {
-      //   delete vidEntity.video;
-      // });
+      const userHasBoughtCourse = detailedCourse.paid_users.some((user) => {
+        return user.uuid === uuid;
+      });
+
+      const userRatingIndex = detailedCourse.rating.findIndex((rating) => {
+        return rating.user.uuid === uuid;
+      });
+
+      if (userHasBoughtCourse) {
+        course.paid = true;
+      } else {
+        course.paid = false;
+      }
+
+      if (userRatingIndex >= 0) {
+        course.my_rating = detailedCourse.rating[userRatingIndex].rate;
+      } else {
+        course.my_rating = 0;
+      }
+      delete course.total_rating; // no idea how it's still there
+      delete course.enrolled_users;
+      delete course.updated_at;
+      delete course.paid_users;
+      if (course.content_creator) {
+        delete course.content_creator.created_at;
+        delete course.content_creator.updated_at;
+        delete course.content_creator.created_by;
+        delete course.content_creator.updated_by;
+        delete course.content_creator.uuid;
+        delete course.content_creator.published_at;
+        delete course.content_creator.id;
+      }
+      course.videos.map((vidEntity, ix) => {
+        if (ix !== 0) {
+          delete vidEntity.video;
+        }
+      });
       return course;
     });
-    let formedArr = Promise.all(promises);
-    formedArr = formedArr.then((r) => {
-      const cleanArr = r.filter((el, _) => {
-        const v = el.enrolled_users.findIndex((el) => el.uuid === uuid);
-        let shouldBeReturned = false;
-        if (v > -1) {
-          shouldBeReturned = true;
-        } else {
-          shouldBeReturned = false; // due to this
-        }
-        return shouldBeReturned;
-      });
-      return cleanArr;
-    });
+    let formedArr = Promise.all(userCourseFixed);
     return formedArr;
   },
 };
