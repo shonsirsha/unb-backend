@@ -181,11 +181,32 @@ module.exports = {
       };
     }
   },
+  async rateCourse(ctx) {
+    const { id } = ctx.state.user;
+    const { uuid } = ctx.params;
+    const { rate } = ctx.request.body;
+    const course = await strapi.query("courses").find({ uuid });
+    if (course.length === 1) {
+      const newRating = course[0].rating.filter((rate) => {
+        return rate.user.id !== id;
+      });
+
+      const result = await strapi
+        .query("courses")
+        .update({ uuid }, { rating: [...newRating, { rate, user: { id } }] });
+      return {
+        course: result,
+      };
+    } else {
+      return ctx.notFound();
+    }
+
+    return "";
+  },
   async enrollCourse(ctx) {
     const { id } = ctx.state.user;
     const { uuid } = ctx.params;
     const course = await strapi.query("courses").find({ uuid });
-    console.log([...course[0].enrolled_users]);
     if (course.length === 1) {
       const result = await strapi
         .query("courses")
@@ -203,7 +224,6 @@ module.exports = {
   async find(ctx) {
     let entities;
     let promises;
-    let course;
     let loggedIn = false;
     if (ctx.query._q) {
       entities = await strapi.services.courses.search(ctx.query);
@@ -227,6 +247,11 @@ module.exports = {
       course.content_creator = detailedCourse.content_creator;
       course.thumbnail = detailedCourse.poster.formats.thumbnail.url;
       course.num_of_participants = detailedCourse.enrolled_users.length;
+      course.total_rating = (
+        course.rating
+          .map((r) => r.rate)
+          .reduce((prev, curr) => prev + curr, 0) / course.rating.length
+      ).toPrecision(2);
       if (!ctx.query.slug) {
         course.videos.map((vidEntity) => {
           delete vidEntity.video;
@@ -235,6 +260,7 @@ module.exports = {
       course.rating.map((c) => {
         delete c.user;
       });
+      delete course.rating;
       delete course.paid_users;
       delete course.paid_users_detail;
       delete course.poster;
@@ -350,6 +376,7 @@ module.exports = {
       delete course.updated_at;
       delete course.paid_users;
       delete course.paid_users_detail;
+      delete course.rating;
       if (course.content_creator) {
         delete course.content_creator.created_at;
         delete course.content_creator.updated_at;

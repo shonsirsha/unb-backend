@@ -82,6 +82,14 @@
       }
     },
     {
+      "method": "PUT",
+      "path": "/courses/rate/:uuid",
+      "handler": "courses.rateCourse",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "DELETE",
       "path": "/courses/:id",
       "handler": "courses.delete",
