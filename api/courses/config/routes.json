@@ -24,14 +24,7 @@
         "policies": []
       }
     },
-    {
-      "method": "POST",
-      "path": "/xendit-cb-test",
-      "handler": "courses.xenditCbTest",
-      "config": {
-        "policies": []
-      }
-    },
+
     {
       "method": "GET",
       "path": "/courses-not-taken",
@@ -76,6 +69,14 @@
       "method": "PUT",
       "path": "/courses/:id",
       "handler": "courses.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/courses/enroll/:uuid",
+      "handler": "courses.enrollCourse",
       "config": {
         "policies": []
       }

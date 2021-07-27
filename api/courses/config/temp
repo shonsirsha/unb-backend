@@ -1,0 +1,8 @@
+{
+      "method": "POST",
+      "path": "/xendit-cb-test",
+      "handler": "courses.xenditCbTest",
+      "config": {
+        "policies": []
+      }
+    },

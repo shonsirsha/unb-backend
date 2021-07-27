@@ -82,55 +82,55 @@ module.exports = {
       });
     }
   },
-  async xenditCbTest(ctx) {
-    const { payer_email, external_id } = ctx.request.body;
-    const pendingPayment = await strapi
-      .query("waiting-payment")
-      .find({ ex_id: `${external_id}` });
-    if (pendingPayment.length > 0) {
-      const { user, course } = pendingPayment[0];
+  // async xenditCbTest(ctx) {
+  //   const { payer_email, external_id } = ctx.request.body;
+  //   const pendingPayment = await strapi
+  //     .query("waiting-payment")
+  //     .find({ ex_id: `${external_id}` });
+  //   if (pendingPayment.length > 0) {
+  //     const { user, course } = pendingPayment[0];
 
-      // get this exact course via a standalone query
-      // due to pendingPayment not returning enrolled_users[] and paid_users[]
-      //but it does return paid_users_detail[]
-      const exactCourse = await strapi.query("courses").find({ id: course.id });
-      const { paid_users, enrolled_users } = exactCourse[0];
+  //     // get this exact course via a standalone query
+  //     // due to pendingPayment not returning enrolled_users[] and paid_users[]
+  //     //but it does return paid_users_detail[]
+  //     const exactCourse = await strapi.query("courses").find({ id: course.id });
+  //     const { paid_users, enrolled_users } = exactCourse[0];
 
-      const userEmailFromDb = user.email;
-      // just for good measure
-      if (payer_email === userEmailFromDb) {
-        const updateCourse = await strapi.query("courses").update(
-          { id: course.id },
-          {
-            paid_users_detail: [
-              ...course.paid_users_detail,
-              { date: new Date(), user },
-            ],
-            paid_users: [...paid_users, user],
-            enrolled_users: [...enrolled_users, user],
-          }
-        );
+  //     const userEmailFromDb = user.email;
+  //     // just for good measure
+  //     if (payer_email === userEmailFromDb) {
+  //       const updateCourse = await strapi.query("courses").update(
+  //         { id: course.id },
+  //         {
+  //           paid_users_detail: [
+  //             ...course.paid_users_detail,
+  //             { date: new Date(), user },
+  //           ],
+  //           paid_users: [...paid_users, user],
+  //           enrolled_users: [...enrolled_users, user],
+  //         }
+  //       );
 
-        if (Object.keys(updateCourse).length > 0) {
-          return {
-            message: "ok",
-          };
-        } else {
-          return ctx.badRequest(null, {
-            message: "Failed updating user and course upon payment",
-          });
-        }
-      } else {
-        return ctx.badRequest(null, {
-          message: "not found",
-        });
-      }
-    } else {
-      return ctx.badRequest(null, {
-        message: "not found",
-      });
-    }
-  },
+  //       if (Object.keys(updateCourse).length > 0) {
+  //         return {
+  //           message: "ok",
+  //         };
+  //       } else {
+  //         return ctx.badRequest(null, {
+  //           message: "Failed updating user and course upon payment",
+  //         });
+  //       }
+  //     } else {
+  //       return ctx.badRequest(null, {
+  //         message: "not found",
+  //       });
+  //     }
+  //   } else {
+  //     return ctx.badRequest(null, {
+  //       message: "not found",
+  //     });
+  //   }
+  // },
   async xendit(ctx) {
     // this endpoint does:
     //1 . Call xendit API to create a new invoice_url
@@ -181,6 +181,25 @@ module.exports = {
       };
     }
   },
+  async enrollCourse(ctx) {
+    const { id } = ctx.state.user;
+    const { uuid } = ctx.params;
+    const course = await strapi.query("courses").find({ uuid });
+    console.log([...course[0].enrolled_users]);
+    if (course.length === 1) {
+      const result = await strapi
+        .query("courses")
+        .update(
+          { uuid },
+          { enrolled_users: [...course[0].enrolled_users, { id }] }
+        );
+      return {
+        course: result,
+      };
+    } else {
+      return ctx.notFound();
+    }
+  },
   async find(ctx) {
     let entities;
     let promises;
@@ -227,7 +246,14 @@ module.exports = {
       } else {
         course.enrolled = false;
       }
-      delete course.enrolled_users;
+
+      course.enrolled_users.map((user) => {
+        Object.keys(user).map((key) => {
+          if (key !== "id") {
+            delete user[key];
+          }
+        });
+      });
 
       return course;
     });
