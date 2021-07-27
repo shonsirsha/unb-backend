@@ -238,6 +238,7 @@ module.exports = {
       delete course.paid_users;
       delete course.paid_users_detail;
       delete course.poster;
+
       if (loggedIn) {
         const userEnrolled = course.enrolled_users.some((user) => {
           return user.uuid === ctx.state.user.uuid;
@@ -246,14 +247,7 @@ module.exports = {
       } else {
         course.enrolled = false;
       }
-
-      course.enrolled_users.map((user) => {
-        Object.keys(user).map((key) => {
-          if (key !== "id") {
-            delete user[key];
-          }
-        });
-      });
+      delete course.enrolled_users;
 
       return course;
     });
@@ -282,13 +276,19 @@ module.exports = {
       course.thumbnail = detailedCourse.poster.formats.thumbnail.url;
       course.num_of_participants = detailedCourse.enrolled_users.length;
       course.enrolled_users = detailedCourse.enrolled_users;
-
+      course.total_rating = (
+        course.rating
+          .map((r) => r.rate)
+          .reduce((prev, curr) => prev + curr, 0) / course.rating.length
+      ).toPrecision(2);
       course.videos.map((vidEntity) => {
         delete vidEntity.video;
       });
       if (course.poster) delete course.poster;
+      delete course.rating;
       delete course.paid_users;
       delete course.paid_users_detail;
+
       return course;
     });
     let formedArr = Promise.all(promises);
@@ -349,6 +349,7 @@ module.exports = {
       delete course.enrolled_users;
       delete course.updated_at;
       delete course.paid_users;
+      delete course.paid_users_detail;
       if (course.content_creator) {
         delete course.content_creator.created_at;
         delete course.content_creator.updated_at;
