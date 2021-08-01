@@ -7,6 +7,18 @@ const fetch = require("node-fetch");
  * to customize this controller
  */
 
+const removePropFromArray = (arr, prop, dontRemoveFirst) => {
+  arr.map((x, ix) => {
+    if (dontRemoveFirst) {
+      if (ix !== 0) {
+        delete x[prop];
+      }
+    } else {
+      delete x[prop];
+    }
+  });
+};
+
 module.exports = {
   async xenditCb(ctx) {
     if (
@@ -247,33 +259,64 @@ module.exports = {
       course.content_creator = detailedCourse.content_creator;
       course.thumbnail = detailedCourse.poster.formats.thumbnail.url;
       course.num_of_participants = detailedCourse.enrolled_users.length;
-      course.total_rating = (
-        course.rating
-          .map((r) => r.rate)
-          .reduce((prev, curr) => prev + curr, 0) / course.rating.length
-      ).toPrecision(2);
-      if (!ctx.query.slug) {
-        course.videos.map((vidEntity) => {
-          delete vidEntity.video;
-        });
-      }
-      course.rating.map((c) => {
-        delete c.user;
-      });
-      delete course.rating;
-      delete course.paid_users;
-      delete course.paid_users_detail;
-      delete course.poster;
+      course.total_rating =
+        course.rating.length > 0
+          ? (
+              course.rating
+                .map((r) => r.rate)
+                .reduce((prev, curr) => prev + curr, 0) / course.rating.length
+            ).toPrecision(2)
+          : 0;
 
       if (loggedIn) {
         const userEnrolled = course.enrolled_users.some((user) => {
           return user.uuid === ctx.state.user.uuid;
         });
+        const userPaid = course.paid_users.some((user) => {
+          return user.uuid === ctx.state.user.uuid;
+        });
         course.enrolled = userEnrolled;
+        course.paid = userPaid;
+        if (!userPaid) {
+          course.videos.map((courseObj, ix) => {
+            if (ix !== 0) {
+              Object.keys(courseObj.video).map((courseProp) => {
+                if (courseProp !== "title" && courseProp !== "video") {
+                  delete courseObj.video[courseProp];
+                }
+              });
+            }
+          });
+        }
       } else {
         course.enrolled = false;
+        course.paid = false;
+        course.videos.map((courseObj, ix) => {
+          Object.keys(courseObj.video).map((courseProp) => {
+            if (courseProp !== "title" && courseProp !== "video") {
+              delete courseObj[courseProp];
+            }
+          });
+        });
+      }
+
+      if (course.content_creator) {
+        delete course.content_creator.created_at;
+        delete course.content_creator.updated_at;
+        delete course.content_creator.created_by;
+        delete course.content_creator.updated_by;
+        delete course.content_creator.uuid;
+        delete course.content_creator.published_at;
+        delete course.content_creator.id;
       }
       delete course.enrolled_users;
+      delete course.rating;
+      delete course.paid_users;
+      delete course.paid_users_detail;
+      delete course.poster;
+      delete course.published_at;
+      delete course.created_at;
+      delete course.updated_at;
 
       return course;
     });
@@ -297,9 +340,8 @@ module.exports = {
       let detailedCourse = await strapi
         .query("courses")
         .findOne({ id: course.id }); // this has 'detailed'/complete (but shallow) relationsF
-      course.image = detailedCourse.poster.url;
+
       course.content_creator = detailedCourse.content_creator;
-      course.thumbnail = detailedCourse.poster.formats.thumbnail.url;
       course.num_of_participants = detailedCourse.enrolled_users.length;
       course.enrolled_users = detailedCourse.enrolled_users;
       course.total_rating = (
@@ -310,11 +352,26 @@ module.exports = {
       course.videos.map((vidEntity) => {
         delete vidEntity.video;
       });
-      if (course.poster) delete course.poster;
+      if (course.poster) {
+        course.image = detailedCourse.poster.url;
+        course.thumbnail = detailedCourse.poster.formats.thumbnail.url;
+        delete course.poster;
+      }
+      if (course.content_creator) {
+        delete course.content_creator.created_at;
+        delete course.content_creator.updated_at;
+        delete course.content_creator.created_by;
+        delete course.content_creator.updated_by;
+        delete course.content_creator.uuid;
+        delete course.content_creator.published_at;
+        delete course.content_creator.id;
+      }
       delete course.rating;
       delete course.paid_users;
       delete course.paid_users_detail;
-
+      delete course.published_at;
+      delete course.created_at;
+      delete course.updated_at;
       return course;
     });
     let formedArr = Promise.all(promises);
@@ -377,6 +434,9 @@ module.exports = {
       delete course.paid_users;
       delete course.paid_users_detail;
       delete course.rating;
+      delete course.published_at;
+      delete course.created_at;
+      delete course.updated_at;
       if (course.content_creator) {
         delete course.content_creator.created_at;
         delete course.content_creator.updated_at;
