@@ -212,8 +212,6 @@ module.exports = {
     } else {
       return ctx.notFound();
     }
-
-    return "";
   },
   async enrollCourse(ctx) {
     const { id } = ctx.state.user;
@@ -275,6 +273,7 @@ module.exports = {
         const userPaid = course.paid_users.some((user) => {
           return user.uuid === ctx.state.user.uuid;
         });
+
         course.enrolled = userEnrolled;
         course.paid = userPaid;
         if (!userPaid) {
@@ -287,10 +286,18 @@ module.exports = {
               });
             }
           });
+          course.bought_at = null;
+        } else {
+          const paidDetails = course.paid_users_detail.filter((detail) => {
+            return ctx.state.user.uuid === detail.user.uuid;
+          });
+          course.bought_at = paidDetails[0].date;
         }
       } else {
         course.enrolled = false;
         course.paid = false;
+        course.bought_at = null;
+
         course.videos.map((courseObj, ix) => {
           Object.keys(courseObj.video).map((courseProp) => {
             if (courseProp !== "title" && courseProp !== "video") {
@@ -316,7 +323,7 @@ module.exports = {
       delete course.published_at;
       delete course.created_at;
       delete course.updated_at;
-      if (!loggedIn) delete course.paid_users_detail;
+      delete course.paid_users_detail;
       return course;
     });
 
