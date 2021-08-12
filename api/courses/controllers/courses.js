@@ -294,7 +294,7 @@ module.exports = {
         course.videos.map((courseObj, ix) => {
           Object.keys(courseObj.video).map((courseProp) => {
             if (courseProp !== "title" && courseProp !== "video") {
-              delete courseObj[courseProp];
+              delete courseObj.video[courseProp];
             }
           });
         });
@@ -312,12 +312,11 @@ module.exports = {
       delete course.enrolled_users;
       delete course.rating;
       delete course.paid_users;
-      delete course.paid_users_detail;
       delete course.poster;
       delete course.published_at;
       delete course.created_at;
       delete course.updated_at;
-
+      if (!loggedIn) delete course.paid_users_detail;
       return course;
     });
 
