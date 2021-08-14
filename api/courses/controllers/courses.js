@@ -329,23 +329,24 @@ module.exports = {
           return user.uuid === ctx.state.user.uuid;
         });
 
-        course.videos.map((courseObj, ix) => {
-          const finishedWatching = courseObj.users_finished_watching.some(
+        course.videos.map((videoObj) => {
+          const finishedWatching = videoObj.users_finished_watching.some(
             (user) => {
               return user.uuid === ctx.state.user.uuid;
             }
           );
-          courseObj.finished_watching = finishedWatching;
+          videoObj.finished_watching = finishedWatching;
+          delete videoObj.users_finished_watching;
         });
 
         course.enrolled = userEnrolled;
         course.paid = userPaid;
         if (!userPaid) {
-          course.videos.map((courseObj, ix) => {
+          course.videos.map((videoObj, ix) => {
             if (ix !== 0) {
-              Object.keys(courseObj.video).map((courseProp) => {
-                if (courseProp !== "title" && courseProp !== "video") {
-                  delete courseObj.video[courseProp];
+              Object.keys(videoObj.video).map((videoProp) => {
+                if (videoProp !== "title") {
+                  delete videoObj.video[videoProp];
                 }
               });
             }
@@ -368,11 +369,12 @@ module.exports = {
         course.bought_on = null;
         course.bought_day_diff = null;
 
-        course.videos.map((courseObj, ix) => {
-          courseObj.finished_watching = false;
-          Object.keys(courseObj.video).map((courseProp) => {
-            if (courseProp !== "title" && courseProp !== "video") {
-              delete courseObj.video[courseProp];
+        course.videos.map((videoObj) => {
+          videoObj.finished_watching = false;
+          delete videoObj.users_finished_watching;
+          Object.keys(videoObj.video).map((videoProp) => {
+            if (videoProp !== "title") {
+              delete videoObj.video[videoProp];
             }
           });
         });
@@ -428,6 +430,7 @@ module.exports = {
       ).toPrecision(2);
       course.videos.map((vidEntity) => {
         delete vidEntity.video;
+        delete vidEntity.users_finished_watching;
       });
       if (course.poster) {
         course.image = detailedCourse.poster.url;
@@ -527,6 +530,7 @@ module.exports = {
         if (ix !== 0) {
           delete vidEntity.video;
         }
+        delete vidEntity.users_finished_watching;
       });
       return course;
     });
