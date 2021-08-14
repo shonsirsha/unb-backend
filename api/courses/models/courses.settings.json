@@ -18,7 +18,11 @@
     "poster": {
       "model": "file",
       "via": "related",
-      "allowedTypes": ["images", "files", "videos"],
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
       "plugin": "upload",
       "required": false,
       "pluginOptions": {}
@@ -60,9 +64,6 @@
       "repeatable": true,
       "component": "rating.rating"
     },
-    "total_rating": {
-      "type": "integer"
-    },
     "paid_users_detail": {
       "type": "component",
       "repeatable": true,
@@ -70,6 +71,11 @@
     },
     "price": {
       "type": "biginteger"
+    },
+    "pengumuman": {
+      "type": "component",
+      "repeatable": true,
+      "component": "pengumuman.pengumuman"
     }
   }
 }

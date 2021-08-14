@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_pengumuman_pengumumen",
+  "info": {
+    "name": "pengumuman",
+    "icon": "allergies",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "date": {
+      "required": true,
+      "type": "date"
+    },
+    "text": {
+      "type": "text"
+    }
+  }
+}

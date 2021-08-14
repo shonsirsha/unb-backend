@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_mission_missions",
+  "info": {
+    "name": "mission",
+    "icon": "child"
+  },
+  "options": {},
+  "attributes": {
+    "text": {
+      "type": "string"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    }
+  }
+}

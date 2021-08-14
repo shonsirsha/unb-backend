@@ -13,6 +13,10 @@
     "video": {
       "plugin": "mux-video-uploader",
       "model": "mux-asset"
+    },
+    "users_finished_watching": {
+      "plugin": "users-permissions",
+      "collection": "user"
     }
   }
 }

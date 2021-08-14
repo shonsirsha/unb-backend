@@ -7,17 +7,13 @@ const fetch = require("node-fetch");
  * to customize this controller
  */
 
-const removePropFromArray = (arr, prop, dontRemoveFirst) => {
-  arr.map((x, ix) => {
-    if (dontRemoveFirst) {
-      if (ix !== 0) {
-        delete x[prop];
-      }
-    } else {
-      delete x[prop];
-    }
-  });
-};
+const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+function dateDiffInDays(a, b) {
+  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+}
 
 module.exports = {
   async xenditCb(ctx) {
@@ -25,7 +21,7 @@ module.exports = {
       ctx.request.header["x-callback-token"] !==
       process.env.XENDIT_CALLBACK_TOKEN
     ) {
-      return "Not Found";
+      return "Not Found.";
     }
     //callback / hook -
     //will be called automatically
@@ -213,6 +209,65 @@ module.exports = {
       return ctx.notFound();
     }
   },
+  async finishCourse(ctx) {
+    const { id } = ctx.state.user;
+    //uuid is course's uuid,
+    //and videoId is singular video's id within a course
+    const { uuid, videoId } = ctx.params;
+    const insertToSpecificIndex = (arr, index, newItem) => [
+      // part of the array before the specified index
+      ...arr.slice(0, index),
+      // inserted item
+      newItem,
+      // part of the array after the specified index
+      ...arr.slice(index),
+    ];
+    const course = await strapi.query("courses").find({ uuid });
+    const userPaid = course[0].paid_users.some((user) => {
+      return user.uuid === ctx.state.user.uuid;
+    });
+    if (!userPaid) {
+      return "Not Found";
+    }
+    let finishedVidIx = 0;
+    let finishedVid = course[0].videos.filter((v, ix) => {
+      if (v.id === parseInt(videoId)) {
+        finishedVidIx = ix;
+        return true;
+      }
+    });
+    let otherVids = course[0].videos.filter((v) => {
+      return v.id !== parseInt(videoId);
+    });
+    finishedVid[0].users_finished_watching = [
+      ...finishedVid[0].users_finished_watching,
+      { id },
+    ];
+
+    const result = await strapi.query("courses").update(
+      { uuid },
+      {
+        videos: insertToSpecificIndex(otherVids, finishedVidIx, finishedVid[0]),
+      }
+    );
+
+    return result;
+
+    // if (course.length === 1) {
+    //   const newRating = course[0].rating.filter((rate) => {
+    //     return rate.user.id !== id;
+    //   });
+
+    //   const result = await strapi
+    //     .query("courses")
+    //     .update({ uuid }, { rating: [...newRating, { rate, user: { id } }] });
+    //   return {
+    //     course: result,
+    //   };
+    // } else {
+    //   return ctx.notFound();
+    // }
+  },
   async enrollCourse(ctx) {
     const { id } = ctx.state.user;
     const { uuid } = ctx.params;
@@ -274,6 +329,15 @@ module.exports = {
           return user.uuid === ctx.state.user.uuid;
         });
 
+        course.videos.map((courseObj, ix) => {
+          const finishedWatching = courseObj.users_finished_watching.some(
+            (user) => {
+              return user.uuid === ctx.state.user.uuid;
+            }
+          );
+          courseObj.finished_watching = finishedWatching;
+        });
+
         course.enrolled = userEnrolled;
         course.paid = userPaid;
         if (!userPaid) {
@@ -286,19 +350,26 @@ module.exports = {
               });
             }
           });
-          course.bought_at = null;
+          course.bought_on = null;
+          course.bought_day_diff = null;
         } else {
           const paidDetails = course.paid_users_detail.filter((detail) => {
             return ctx.state.user.uuid === detail.user.uuid;
           });
-          course.bought_at = paidDetails[0].date;
+          course.bought_on = paidDetails[0].date;
+          course.bought_day_diff = dateDiffInDays(
+            new Date(course.bought_on),
+            new Date()
+          );
         }
       } else {
         course.enrolled = false;
         course.paid = false;
-        course.bought_at = null;
+        course.bought_on = null;
+        course.bought_day_diff = null;
 
         course.videos.map((courseObj, ix) => {
+          courseObj.finished_watching = false;
           Object.keys(courseObj.video).map((courseProp) => {
             if (courseProp !== "title" && courseProp !== "video") {
               delete courseObj.video[courseProp];

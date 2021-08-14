@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "missions",
+  "info": {
+    "name": "Mission",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "mission": {
+      "type": "component",
+      "repeatable": true,
+      "component": "mission.mission"
+    }
+  }
+}
