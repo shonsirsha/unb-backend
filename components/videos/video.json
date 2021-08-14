@@ -17,6 +17,11 @@
     "users_finished_watching": {
       "plugin": "users-permissions",
       "collection": "user"
+    },
+    "missions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "mission.mission"
     }
   }
 }

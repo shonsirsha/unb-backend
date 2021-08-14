@@ -336,6 +336,9 @@ module.exports = {
             }
           );
           videoObj.finished_watching = finishedWatching;
+          if (!finishedWatching) {
+            videoObj.missions = []; // "hide" missions if user hasnt finished watching
+          }
           delete videoObj.users_finished_watching;
         });
 
@@ -371,6 +374,7 @@ module.exports = {
 
         course.videos.map((videoObj) => {
           videoObj.finished_watching = false;
+          videoObj.missions = [];
           delete videoObj.users_finished_watching;
           Object.keys(videoObj.video).map((videoProp) => {
             if (videoProp !== "title") {
@@ -431,6 +435,7 @@ module.exports = {
       course.videos.map((vidEntity) => {
         delete vidEntity.video;
         delete vidEntity.users_finished_watching;
+        videoObj.missions = [];
       });
       if (course.poster) {
         course.image = detailedCourse.poster.url;
@@ -530,6 +535,7 @@ module.exports = {
         if (ix !== 0) {
           delete vidEntity.video;
         }
+        videoObj.missions = [];
         delete vidEntity.users_finished_watching;
       });
       return course;

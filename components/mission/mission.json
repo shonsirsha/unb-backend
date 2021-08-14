@@ -2,17 +2,17 @@
   "collectionName": "components_mission_missions",
   "info": {
     "name": "mission",
-    "icon": "child"
+    "icon": "child",
+    "description": ""
   },
   "options": {},
   "attributes": {
     "text": {
       "type": "string"
     },
-    "completed": {
-      "type": "boolean",
-      "default": false,
-      "required": true
+    "users_completed_mission": {
+      "plugin": "users-permissions",
+      "collection": "user"
     }
   }
 }
