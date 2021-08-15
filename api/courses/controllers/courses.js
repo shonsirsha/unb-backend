@@ -341,6 +341,8 @@ module.exports = {
         });
 
         course.videos.map((videoObj) => {
+          let numberOfMissionsFinished = 0;
+          let numOfMissions = 0;
           const finishedWatching = videoObj.users_finished_watching.some(
             (user) => {
               return user.uuid === ctx.state.user.uuid;
@@ -351,17 +353,20 @@ module.exports = {
             videoObj.missions = []; // "hide" missions if user hasnt finished watching
           } else {
             videoObj.missions.map((m) => {
+              numOfMissions++;
               const userCompletedThisMission = m.users_completed_mission.some(
                 (user) => {
                   return user.uuid === ctx.state.user.uuid;
                 }
               );
-              delete m.users_completed_mission;
               m.completed = userCompletedThisMission;
+              if (userCompletedThisMission) numberOfMissionsFinished++;
+              delete m.users_completed_mission;
               return m;
             });
           }
-
+          videoObj.all_missions_completed =
+            numberOfMissionsFinished === numOfMissions;
           delete videoObj.users_finished_watching;
         });
 
