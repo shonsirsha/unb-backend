@@ -252,24 +252,8 @@ module.exports = {
     );
 
     return result;
-
-    // if (course.length === 1) {
-    //   const newRating = course[0].rating.filter((rate) => {
-    //     return rate.user.id !== id;
-    //   });
-
-    //   const result = await strapi
-    //     .query("courses")
-    //     .update({ uuid }, { rating: [...newRating, { rate, user: { id } }] });
-    //   return {
-    //     course: result,
-    //   };
-    // } else {
-    //   return ctx.notFound();
-    // }
   },
   async currentMission(ctx) {
-    const { id } = ctx.state.user;
     //uuid is course's uuid,
     //and videoId is singular video's id within a course
     const { uuid, videoId } = ctx.params;
@@ -365,7 +349,19 @@ module.exports = {
           videoObj.finished_watching = finishedWatching;
           if (!finishedWatching) {
             videoObj.missions = []; // "hide" missions if user hasnt finished watching
+          } else {
+            videoObj.missions.map((m) => {
+              const userCompletedThisMission = m.users_completed_mission.some(
+                (user) => {
+                  return user.uuid === ctx.state.user.uuid;
+                }
+              );
+              delete m.users_completed_mission;
+              m.completed = userCompletedThisMission;
+              return m;
+            });
           }
+
           delete videoObj.users_finished_watching;
         });
 

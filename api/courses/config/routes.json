@@ -90,6 +90,14 @@
       }
     },
     {
+      "method": "PUT",
+      "path": "/courses/finish/:uuid/:videoId",
+      "handler": "courses.finishCourse",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "GET",
       "path": "/courses/current-mission/:uuid/:videoId",
       "handler": "courses.currentMission",
