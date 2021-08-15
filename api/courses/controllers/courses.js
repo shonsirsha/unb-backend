@@ -305,17 +305,18 @@ module.exports = {
       }
     });
 
+    console.log(targetVid);
+
     let otherVids = course[0].videos.filter((v) => {
       return v.id !== parseInt(videoId);
     });
 
-    course[0].videos[0].missions.map((m) => {
+    targetVid[0].missions.map((m) => {
       if (missionIds.includes(m.id)) {
         m.users_completed_mission = [...m.users_completed_mission, { id }];
       }
       return m;
     });
-
     const result = await strapi.query("courses").update(
       { uuid },
       {
