@@ -268,6 +268,33 @@ module.exports = {
     //   return ctx.notFound();
     // }
   },
+  async currentMission(ctx) {
+    const { id } = ctx.state.user;
+    //uuid is course's uuid,
+    //and videoId is singular video's id within a course
+    const { uuid, videoId } = ctx.params;
+
+    let course = await strapi.query("courses").find({ uuid });
+
+    course[0].videos = course[0].videos.filter(
+      (vidProp) => vidProp.id === parseInt(videoId)
+    );
+
+    const finishedWatching = course[0].videos[0].users_finished_watching.some(
+      (user) => {
+        return user.uuid === ctx.state.user.uuid;
+      }
+    );
+
+    if (!finishedWatching) return [];
+
+    const missions = course[0].videos[0].missions.map((m) => {
+      delete m.users_completed_mission;
+      return m;
+    });
+
+    return missions;
+  },
   async enrollCourse(ctx) {
     const { id } = ctx.state.user;
     const { uuid } = ctx.params;
@@ -435,7 +462,7 @@ module.exports = {
       course.videos.map((vidEntity) => {
         delete vidEntity.video;
         delete vidEntity.users_finished_watching;
-        videoObj.missions = [];
+        vidEntity.missions = [];
       });
       if (course.poster) {
         course.image = detailedCourse.poster.url;
@@ -535,7 +562,7 @@ module.exports = {
         if (ix !== 0) {
           delete vidEntity.video;
         }
-        videoObj.missions = [];
+        vidEntity.missions = [];
         delete vidEntity.users_finished_watching;
       });
       return course;

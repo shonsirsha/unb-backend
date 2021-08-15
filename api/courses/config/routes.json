@@ -90,9 +90,9 @@
       }
     },
     {
-      "method": "PUT",
-      "path": "/courses/finish/:uuid/:videoId",
-      "handler": "courses.finishCourse",
+      "method": "GET",
+      "path": "/courses/current-mission/:uuid/:videoId",
+      "handler": "courses.currentMission",
       "config": {
         "policies": []
       }
