@@ -223,10 +223,10 @@ module.exports = {
       ...arr.slice(index),
     ];
     const course = await strapi.query("courses").find({ uuid });
-    const userPaid = course[0].paid_users.some((user) => {
+    const userEnrolled = course[0].enrolled_users.some((user) => {
       return user.uuid === ctx.state.user.uuid;
     });
-    if (!userPaid) {
+    if (!userEnrolled) {
       return "Not Found";
     }
     let finishedVidIx = 0;
