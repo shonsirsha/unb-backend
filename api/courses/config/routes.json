@@ -106,6 +106,14 @@
       }
     },
     {
+      "method": "PUT",
+      "path": "/courses/do-mission/:uuid/:videoId",
+      "handler": "courses.doMission",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "DELETE",
       "path": "/courses/:id",
       "handler": "courses.delete",

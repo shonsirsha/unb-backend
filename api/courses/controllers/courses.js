@@ -15,6 +15,15 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+const insertToSpecificIndex = (arr, index, newItem) => [
+  // part of the array before the specified index
+  ...arr.slice(0, index),
+  // inserted item
+  newItem,
+  // part of the array after the specified index
+  ...arr.slice(index),
+];
+
 module.exports = {
   async xenditCb(ctx) {
     if (
@@ -214,14 +223,7 @@ module.exports = {
     //uuid is course's uuid,
     //and videoId is singular video's id within a course
     const { uuid, videoId } = ctx.params;
-    const insertToSpecificIndex = (arr, index, newItem) => [
-      // part of the array before the specified index
-      ...arr.slice(0, index),
-      // inserted item
-      newItem,
-      // part of the array after the specified index
-      ...arr.slice(index),
-    ];
+
     const course = await strapi.query("courses").find({ uuid });
     const userEnrolled = course[0].enrolled_users.some((user) => {
       return user.uuid === ctx.state.user.uuid;
@@ -278,6 +280,50 @@ module.exports = {
     });
 
     return missions;
+  },
+  async doMission(ctx) {
+    //uuid is course's uuid,
+    //and videoId is singular video's id within a course
+    const { id } = ctx.state.user;
+    const { uuid, videoId } = ctx.params;
+
+    let course = await strapi.query("courses").find({ uuid });
+
+    const userEnrolled = course[0].enrolled_users.some((user) => {
+      return user.uuid === ctx.state.user.uuid;
+    });
+    if (!userEnrolled) {
+      return "Not Found";
+    }
+
+    const { missionIds } = ctx.request.body;
+    let finishedVidIx = 0;
+    let targetVid = course[0].videos.filter((vidProp, ix) => {
+      if (vidProp.id === parseInt(videoId)) {
+        finishedVidIx = ix;
+        return true;
+      }
+    });
+
+    let otherVids = course[0].videos.filter((v) => {
+      return v.id !== parseInt(videoId);
+    });
+
+    course[0].videos[0].missions.map((m) => {
+      if (missionIds.includes(m.id)) {
+        m.users_completed_mission = [...m.users_completed_mission, { id }];
+      }
+      return m;
+    });
+
+    const result = await strapi.query("courses").update(
+      { uuid },
+      {
+        videos: insertToSpecificIndex(otherVids, finishedVidIx, targetVid[0]),
+      }
+    );
+
+    return result;
   },
   async enrollCourse(ctx) {
     const { id } = ctx.state.user;
@@ -342,7 +388,6 @@ module.exports = {
 
         course.videos.map((videoObj) => {
           let numberOfMissionsFinished = 0;
-          let numOfMissions = 0;
           const finishedWatching = videoObj.users_finished_watching.some(
             (user) => {
               return user.uuid === ctx.state.user.uuid;
@@ -353,7 +398,6 @@ module.exports = {
             videoObj.missions = []; // "hide" missions if user hasnt finished watching
           } else {
             videoObj.missions.map((m) => {
-              numOfMissions++;
               const userCompletedThisMission = m.users_completed_mission.some(
                 (user) => {
                   return user.uuid === ctx.state.user.uuid;
@@ -365,8 +409,10 @@ module.exports = {
               return m;
             });
           }
-          videoObj.all_missions_completed =
-            numberOfMissionsFinished === numOfMissions;
+          videoObj.all_missions_completed = numberOfMissionsFinished =
+            numberOfMissionsFinished === 0
+              ? false
+              : numberOfMissionsFinished === videoObj.missions.length; // if user completed 0 missions, then should be false
           delete videoObj.users_finished_watching;
         });
 
