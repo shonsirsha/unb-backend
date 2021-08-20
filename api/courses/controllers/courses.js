@@ -61,7 +61,7 @@ module.exports = {
       const exactCourse = await strapi.query("courses").find({ id: course.id });
       const { paid_users, enrolled_users } = exactCourse[0];
 
-      // just for good measure
+      // conditional check just for good measure
       if (payer_email === userEmailFromDb) {
         const updateCourse = await strapi.query("courses").update(
           { id: course.id },
@@ -410,7 +410,7 @@ module.exports = {
               return m;
             });
           }
-          videoObj.all_missions_completed = numberOfMissionsFinished =
+          videoObj.all_missions_completed =
             numberOfMissionsFinished === 0
               ? false
               : numberOfMissionsFinished === videoObj.missions.length; // if user completed 0 missions, then should be false
@@ -606,13 +606,38 @@ module.exports = {
         delete course.content_creator.published_at;
         delete course.content_creator.id;
       }
+      let num_of_course_finished = 0;
       course.videos.map((vidEntity, ix) => {
+        let numOfMissions = vidEntity.missions.length;
+        let numberOfMissionsFinished = 0;
         if (ix !== 0) {
           delete vidEntity.video;
         }
-        vidEntity.missions = [];
+
+        vidEntity.missions.map((m) => {
+          const userCompletedThisMission = m.users_completed_mission.some(
+            (user) => {
+              return user.uuid === ctx.state.user.uuid;
+            }
+          );
+
+          m.completed = userCompletedThisMission;
+          if (userCompletedThisMission) numberOfMissionsFinished++;
+
+          vidEntity.all_missions_completed =
+            numberOfMissionsFinished === 0
+              ? false
+              : numberOfMissionsFinished === numOfMissions; // if user completed 0 missions, then should be false
+
+          if (vidEntity.all_missions_completed) num_of_course_finished++;
+        });
+
         delete vidEntity.users_finished_watching;
+        vidEntity.missions = [];
       });
+      course.percentage_course_finished = parseInt(
+        (num_of_course_finished / course.videos.length) * 100
+      );
       return course;
     });
     let formedArr = Promise.all(userCourseFixed);
