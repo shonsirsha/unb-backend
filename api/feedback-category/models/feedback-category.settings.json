@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "feedback_categories",
+  "info": {
+    "name": "FeedbackCategory"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    }
+  }
+}
