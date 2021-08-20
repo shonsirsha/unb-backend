@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "announcements",
+  "info": {
+    "name": "announcement",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "pengumuman": {
+      "type": "component",
+      "repeatable": true,
+      "component": "pengumuman.pengumuman"
+    },
+    "course_name": {
+      "type": "string"
+    }
+  }
+}

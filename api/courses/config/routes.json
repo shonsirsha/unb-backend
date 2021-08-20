@@ -92,7 +92,7 @@
     {
       "method": "PUT",
       "path": "/courses/finish/:uuid/:videoId",
-      "handler": "courses.finishCourse",
+      "handler": "courses.finishVideo",
       "config": {
         "policies": []
       }

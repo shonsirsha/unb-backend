@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "prices",
+  "info": {
+    "name": "price"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "course_name": {
+      "type": "string"
+    },
+    "price": {
+      "type": "string"
+    }
+  }
+}

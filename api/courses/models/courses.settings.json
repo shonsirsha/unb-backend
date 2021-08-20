@@ -69,13 +69,11 @@
       "repeatable": true,
       "component": "paid-users-detail.paid-users-detail"
     },
-    "price": {
-      "type": "biginteger"
+    "course_price": {
+      "model": "price"
     },
-    "pengumuman": {
-      "type": "component",
-      "repeatable": true,
-      "component": "pengumuman.pengumuman"
+    "announcement": {
+      "model": "announcement"
     }
   }
 }

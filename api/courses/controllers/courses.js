@@ -192,7 +192,7 @@ module.exports = {
         user,
         course: { id: courseId },
       });
-
+      console.log("jmbd");
       return {
         invoice_url: inv.invoice_url,
       };
@@ -218,7 +218,7 @@ module.exports = {
       return ctx.notFound();
     }
   },
-  async finishCourse(ctx) {
+  async finishVideo(ctx) {
     const { id } = ctx.state.user;
     //uuid is course's uuid,
     //and videoId is singular video's id within a course
