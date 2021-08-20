@@ -1,15 +1,17 @@
 module.exports = ({ env }) => ({
   // ...
   upload: {
-    provider: "cloudinary",
+    provider: "aws-s3",
     providerOptions: {
-      cloud_name: env("CLOUDINARY_NAME"),
-      api_key: env("CLOUDINARY_KEY"),
-      api_secret: env("CLOUDINARY_SECRET"),
-    },
-    actionOptions: {
-      upload: {},
-      delete: {},
+      accessKeyId: env("S3_ACCESS_KEY", "AKIAR542CBFUCLJTNUDE"),
+      secretAccessKey: env(
+        "S3_SECRET_ACCESS_KEY",
+        "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"
+      ),
+      region: "ap-southeast-1",
+      params: {
+        Bucket: "unb-dev",
+      },
     },
   },
   email: {
