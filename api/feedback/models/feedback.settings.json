@@ -12,16 +12,15 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "feedback_text": {
-      "type": "richtext",
-      "maxLength": 100
-    },
     "category": {
       "model": "feedback-category"
     },
     "user": {
       "plugin": "users-permissions",
       "model": "user"
+    },
+    "feedback_text": {
+      "type": "text"
     }
   }
 }

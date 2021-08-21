@@ -7,8 +7,6 @@
 
 module.exports = {
   async create(ctx) {
-    const { feedback_text, category } = ctx.request.body;
-
     const { id } = ctx.state.user;
     await strapi
       .query("feedback")
