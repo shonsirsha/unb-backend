@@ -216,7 +216,7 @@ const getProfile = async (provider, query, callback) => {
               username: body.email.split("@")[0],
               first_name: body.given_name,
               last_name: body.family_name,
-              email: `${body.email}`,
+              email: `${body.email} `,
             });
           }
         });
