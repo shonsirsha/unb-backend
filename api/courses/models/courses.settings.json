@@ -31,8 +31,8 @@
       "type": "uid"
     },
     "content_creator": {
-      "model": "content-creators",
-      "via": "courses"
+      "via": "courses",
+      "model": "content-creators"
     },
     "paid_users": {
       "via": "paid_courses",
@@ -50,9 +50,9 @@
       "maxLength": 64
     },
     "enrolled_users": {
+      "via": "enrolled_courses",
       "plugin": "users-permissions",
       "collection": "user",
-      "via": "enrolled_courses",
       "dominant": true
     },
     "slug": {

@@ -86,7 +86,8 @@
     },
     "onboarded": {
       "type": "boolean",
-      "default": false
+      "default": false,
+      "required": true
     },
     "paid_courses": {
       "via": "paid_users",

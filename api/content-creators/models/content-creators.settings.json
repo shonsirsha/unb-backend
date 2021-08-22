@@ -21,6 +21,14 @@
     "courses": {
       "via": "content_creator",
       "collection": "courses"
+    },
+    "content_creator_type": {
+      "type": "enumeration",
+      "enum": [
+        "UNB",
+        "KOL",
+        "ADS"
+      ]
     }
   }
 }
