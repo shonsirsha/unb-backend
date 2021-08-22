@@ -40,14 +40,7 @@ module.exports = async () => {
       callback: `${strapi.config.server.url}/auth/facebook/callback`,
       scope: ["email"],
     },
-    google: {
-      enabled: false,
-      icon: "google",
-      key: "",
-      secret: "",
-      callback: `${strapi.config.server.url}/auth/google/callback`,
-      scope: ["email", "profile"],
-    },
+
     github: {
       enabled: false,
       icon: "github",
