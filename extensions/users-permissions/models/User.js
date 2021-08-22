@@ -19,7 +19,7 @@ module.exports = {
         {
           uuid: user_uuid,
           username: user_uuid,
-          first_name: data.first_name,
+          first_name: "NAMA DEPAN",
           last_name: data.last_name,
           onboarded: false,
         }
