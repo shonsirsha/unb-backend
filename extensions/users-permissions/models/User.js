@@ -9,11 +9,7 @@ module.exports = {
     async afterCreate(data) {
       //todo to  edit and add Full Name
       const user_uuid = uuidv4();
-      console.log("=============");
-      console.log(data);
-      console.log("=============");
 
-      console.log(data.first_name);
       await strapi.plugins["users-permissions"].services.user.edit(
         { id: data.id },
         {
@@ -21,6 +17,7 @@ module.exports = {
           username: user_uuid,
           first_name: data.first_name,
           last_name: data.last_name,
+          dob: data.dob,
           onboarded: false,
         }
       );

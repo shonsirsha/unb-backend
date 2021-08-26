@@ -95,6 +95,9 @@
     "enrolled_courses": {
       "via": "enrolled_users",
       "collection": "courses"
+    },
+    "dob": {
+      "type": "date"
     }
   }
 }
