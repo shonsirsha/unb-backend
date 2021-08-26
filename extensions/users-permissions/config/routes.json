@@ -23,6 +23,15 @@
         "policies": [],
         "prefix": ""
       }
+    },
+    {
+      "method": "PUT",
+      "path": "/users/password-reset",
+      "handler": "User.passwordReset",
+      "config": {
+        "policies": [],
+        "prefix": ""
+      }
     }
   ]
 }

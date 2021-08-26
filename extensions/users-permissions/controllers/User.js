@@ -129,6 +129,58 @@ module.exports = {
 
     ctx.send(sanitizeUser(data));
   },
+
+  passwordReset: async (ctx) => {
+    // Get posted params
+    // const params = JSON.parse(ctx.request.body); //if post raw object using Postman
+    const params = ctx.request.body;
+
+    const { uuid } = ctx.state.user;
+
+    // The identifier is required.
+    if (!params.identifier) {
+      return ctx.badRequest(null, {
+        error: "wrong.password",
+      });
+    }
+
+    // Other params validation
+
+    // Get User based on identifier
+    const user = await strapi
+      .query("user", "users-permissions")
+      .findOne({ username: params.identifier });
+
+    if (user.uuid === uuid) {
+      // Validate given password against user query result password
+      const validPassword = await strapi.plugins[
+        "users-permissions"
+      ].services.user.validatePassword(params.password, user.password);
+
+      if (!validPassword) {
+        console.log("SX");
+        return ctx.badRequest(null, {
+          error: "wrong.password",
+        });
+      } else {
+        // Generate new hash password
+        const password = await strapi.plugins[
+          "users-permissions"
+        ].services.user.hashPassword({ password: params.newPassword });
+        // Update user password
+        await strapi
+          .query("user", "users-permissions")
+          .update({ id: user.id }, { resetPasswordToken: null, password });
+
+        // Return new jwt token
+        ctx.send({
+          jwt: strapi.plugins["users-permissions"].services.jwt.issue({
+            id: user.id,
+          }),
+        });
+      }
+    }
+  },
 };
 
 const getCourseVideosFromByCourseId = (myArray) => {
