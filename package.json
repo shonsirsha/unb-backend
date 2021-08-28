@@ -23,7 +23,6 @@
     "strapi-plugin-content-type-builder": "3.6.5",
     "strapi-plugin-email": "3.6.5",
     "strapi-plugin-i18n": "3.6.5",
-    "strapi-plugin-mux-video-uploader": "^1.2.0",
     "strapi-plugin-upload": "3.6.5",
     "strapi-plugin-users-permissions": "3.6.5",
     "strapi-provider-email-nodemailer": "^3.6.5",
