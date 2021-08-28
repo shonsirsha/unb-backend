@@ -181,6 +181,7 @@ module.exports = {
     const inv = await res.json();
 
     if (!res.ok) {
+      console.log(inv);
       return ctx.badRequest(null, {
         message: inv.message,
       });

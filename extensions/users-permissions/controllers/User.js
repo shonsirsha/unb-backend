@@ -162,7 +162,7 @@ module.exports = {
     const user = await strapi
       .query("user", "users-permissions")
       .findOne({ username: params.identifier });
-
+    console.log(params.identifier);
     if (user.uuid === uuid) {
       // Validate given password against user query result password
       const validPassword = await strapi.plugins[
