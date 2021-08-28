@@ -9,15 +9,7 @@
         "prefix": false
       }
     },
-    {
-      "method": "POST",
-      "path": "/mux-video-uploader/cd",
-      "handler": "mux.testCheckDuration",
-      "config": {
-        "policies": [],
-        "prefix": false
-      }
-    },
+
     {
       "method": "POST",
       "path": "/mux-video-uploader/submitDirectUpload",
