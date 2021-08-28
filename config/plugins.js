@@ -26,8 +26,8 @@ module.exports = ({ env }) => ({
       // ... any custom nodemailer options
     },
     settings: {
-      defaultFrom: "threesigma.tech@gmail.com",
-      defaultReplyTo: "threesigma.tech@gmail.com",
+      defaultFrom: env("SMTP_USERNAME"),
+      defaultReplyTo: env("SMTP_USERNAME"),
     },
   },
   // ...

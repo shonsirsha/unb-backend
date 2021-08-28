@@ -32,6 +32,15 @@
         "policies": [],
         "prefix": ""
       }
+    },
+    {
+      "method": "POST",
+      "path": "/users/is-local-provider",
+      "handler": "User.isLocalProvider",
+      "config": {
+        "policies": [],
+        "prefix": ""
+      }
     }
   ]
 }

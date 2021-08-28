@@ -130,6 +130,18 @@ module.exports = {
     ctx.send(sanitizeUser(data));
   },
 
+  isLocalProvider: async (ctx) => {
+    const { email } = ctx.request.body;
+    const user = await strapi
+      .query("user", "users-permissions")
+      .findOne({ email });
+    if (user === null) return { localProvider: false };
+    if (user.provider === "local") {
+      return { localProvider: true };
+    }
+    return { localProvider: false };
+  },
+
   passwordReset: async (ctx) => {
     // Get posted params
     // const params = JSON.parse(ctx.request.body); //if post raw object using Postman
