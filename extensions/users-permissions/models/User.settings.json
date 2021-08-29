@@ -98,6 +98,11 @@
     },
     "dob": {
       "type": "date"
+    },
+    "wishlist": {
+      "type": "component",
+      "repeatable": true,
+      "component": "wishlist.wishlist"
     }
   }
 }

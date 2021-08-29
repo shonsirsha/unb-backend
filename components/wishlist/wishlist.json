@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_wishlist_wishlists",
+  "info": {
+    "name": "wishlist",
+    "icon": "heart"
+  },
+  "options": {},
+  "attributes": {
+    "course": {
+      "model": "courses"
+    }
+  }
+}
