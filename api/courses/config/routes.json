@@ -83,6 +83,22 @@
     },
     {
       "method": "PUT",
+      "path": "/courses/wishlist/:id",
+      "handler": "courses.wishlistCourse",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/courses/remove-wishlist/:id",
+      "handler": "courses.removeWishlistCourse",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
       "path": "/courses/rate/:uuid",
       "handler": "courses.rateCourse",
       "config": {

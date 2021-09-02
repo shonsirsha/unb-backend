@@ -327,6 +327,55 @@ module.exports = {
 
     return result;
   },
+  async removeWishlistCourse(ctx) {
+    const { id } = ctx.state.user;
+    const courseId = parseInt(ctx.params.id);
+    let wishlist = [];
+    const user = await strapi.plugins["users-permissions"].services.user.fetch({
+      id,
+    });
+
+    wishlist = user.wishlist.filter((c) => c.course.id !== courseId);
+    await strapi.plugins["users-permissions"].services.user.edit(
+      { id },
+      {
+        wishlist,
+      }
+    );
+    return wishlist;
+  },
+  async wishlistCourse(ctx) {
+    const { id } = ctx.state.user;
+    const courseId = ctx.params.id;
+
+    const user = await strapi.plugins["users-permissions"].services.user.fetch({
+      id,
+    });
+    let alreadyInWishlist = false;
+    let sentWishlist = [];
+
+    if (user.wishlist) {
+      alreadyInWishlist = user.wishlist.some((c) => {
+        return parseInt(courseId) === c.course.id;
+      });
+    }
+
+    if (!alreadyInWishlist) {
+      sentWishlist = [...user.wishlist, { course: { id: courseId } }];
+
+      await strapi.plugins["users-permissions"].services.user.edit(
+        { id },
+        {
+          wishlist: sentWishlist,
+        }
+      );
+      return sentWishlist;
+    } else {
+      return ctx.badRequest(null, {
+        message: "This has been added",
+      });
+    }
+  },
   async enrollCourse(ctx) {
     const { id } = ctx.state.user;
     const { uuid } = ctx.params;

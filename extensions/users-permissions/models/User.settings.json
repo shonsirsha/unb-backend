@@ -103,6 +103,46 @@
       "type": "component",
       "repeatable": true,
       "component": "wishlist.wishlist"
+    },
+    "gender": {
+      "type": "enumeration",
+      "enum": [
+        "m",
+        "f"
+      ]
+    },
+    "biodata": {
+      "type": "text"
+    },
+    "phone_number": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "province": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "education_status": {
+      "type": "string"
+    },
+    "instagram": {
+      "type": "string"
+    },
+    "twitter": {
+      "type": "string"
+    },
+    "facebook": {
+      "type": "string"
+    },
+    "youtube": {
+      "type": "string"
+    },
+    "blog": {
+      "type": "string"
     }
   }
 }
