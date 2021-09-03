@@ -1,5 +1,7 @@
 const fetch = require("node-fetch");
 const { getConfig } = require("../services/mux");
+const pluginPkg = require("../package.json");
+const pluginId = pluginPkg.name.replace(/^strapi-plugin-/i, "");
 const model = `plugins::${pluginId}.mux-asset`;
 
 module.exports = {
