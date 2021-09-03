@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
-const Mux = require("@mux/mux-node");
 const { getConfig } = require("../services/mux");
+const model = `plugins::${pluginId}.mux-asset`;
 
 module.exports = {
   async muxWebhookHandler(ctx) {
