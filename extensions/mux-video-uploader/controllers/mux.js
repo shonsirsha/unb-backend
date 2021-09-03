@@ -76,6 +76,9 @@ module.exports = {
     } else {
       duration = 0;
     }
+    console.log(res);
+    console.log("==================");
+    console.log(inv);
     console.log(duration);
 
     payload = { ...payload, duration_seconds: duration };
