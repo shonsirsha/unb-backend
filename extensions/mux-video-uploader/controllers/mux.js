@@ -76,11 +76,11 @@ module.exports = {
     } else {
       duration = 0;
     }
+    console.log(duration);
 
     payload = { ...payload, duration_seconds: duration };
-
+    console.log(payload);
     const result = await strapi.entityService.update(payload, { model });
-
     ctx.send(result);
   },
   async testCheckDuration(ctx) {
