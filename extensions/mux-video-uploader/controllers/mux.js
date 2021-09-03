@@ -83,6 +83,8 @@ module.exports = {
         ...payload,
         data: { ...payload.data, duration_seconds: duration.toString() },
       };
+      console.log("********");
+      console.log(payload);
     } else {
       ctx.send("ignored");
 
