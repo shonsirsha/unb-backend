@@ -48,47 +48,47 @@ module.exports = {
           isReady: true,
         },
       };
+
+      const res = await fetch(
+        `https://api.mux.com/video/v1/assets/${body.data.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Basic " +
+              Buffer.from(
+                `${config.access_token}:${config.secret_key}`
+              ).toString("base64"),
+          },
+        }
+      );
+
+      let duration;
+      const inv = await res.json();
+
+      if (res.ok) {
+        duration = inv.data.duration;
+      } else {
+        duration = 0;
+      }
+
+      console.log(duration);
+      console.log("========");
+      console.log(inv);
+      console.log("=========");
+      console.log(res);
+
+      payload = {
+        ...payload,
+        data: { ...payload.data, duration_seconds: duration.toString() },
+      };
     } else {
       ctx.send("ignored");
 
       return;
     }
 
-    const res = await fetch(
-      `https://api.mux.com/video/v1/assets/${data.asset_id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization:
-            "Basic " +
-            Buffer.from(`${config.access_token}:${config.secret_key}`).toString(
-              "base64"
-            ),
-        },
-      }
-    );
-    console.log("AT: " + config.access_token);
-    console.log("SK: " + config.secret_key);
-    console.log("======================");
-    let duration;
-    const inv = await res.json();
-
-    if (res.ok) {
-      duration = inv.data.duration;
-    } else {
-      duration = 0;
-    }
-    console.log(res);
-    console.log("==================");
-    console.log(inv);
-    console.log(duration);
-
-    payload = {
-      ...payload,
-      data: { ...payload.data, duration_seconds: duration },
-    };
-    console.log(payload);
     const result = await strapi.entityService.update(payload, { model });
     ctx.send(result);
   },
@@ -96,7 +96,7 @@ module.exports = {
     const config = await getConfig("general");
 
     const res = await fetch(
-      `https://api.mux.com/video/v1/assets/zgwpT833fUHuQkDHwgYkd02d4301igTgZSq4YLu77QlAo`,
+      `https://api.mux.com/video/v1/assets/Xdv00601s015HlDR02YdX6WxF6MS46gVR64xp02u02tzELoNc`,
       {
         method: "GET",
         headers: {
