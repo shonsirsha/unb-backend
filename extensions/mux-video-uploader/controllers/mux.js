@@ -68,6 +68,9 @@ module.exports = {
         },
       }
     );
+    console.log("AT: " + config.access_token);
+    console.log("SK: " + config.secret_key);
+    console.log("======================");
     let duration;
     const inv = await res.json();
 
@@ -81,7 +84,10 @@ module.exports = {
     console.log(inv);
     console.log(duration);
 
-    payload = { ...payload, duration_seconds: duration };
+    payload = {
+      ...payload,
+      data: { ...payload.data, duration_seconds: duration },
+    };
     console.log(payload);
     const result = await strapi.entityService.update(payload, { model });
     ctx.send(result);
