@@ -2,48 +2,48 @@
   "routes": [
     {
       "method": "GET",
-      "path": "/referral-codes",
-      "handler": "referral-codes.find",
+      "path": "/transactions",
+      "handler": "transaction.find",
       "config": {
         "policies": []
       }
     },
     {
       "method": "GET",
-      "path": "/referral-codes/count",
-      "handler": "referral-codes.count",
+      "path": "/transactions/count",
+      "handler": "transaction.count",
       "config": {
         "policies": []
       }
     },
     {
       "method": "GET",
-      "path": "/referral-codes/:id",
-      "handler": "referral-codes.findOne",
+      "path": "/transactions/:id",
+      "handler": "transaction.findOne",
       "config": {
         "policies": []
       }
     },
     {
       "method": "POST",
-      "path": "/referral-codes",
-      "handler": "referral-codes.create",
+      "path": "/transactions",
+      "handler": "transaction.create",
       "config": {
         "policies": []
       }
     },
     {
       "method": "PUT",
-      "path": "/referral-codes/:id",
-      "handler": "referral-codes.update",
+      "path": "/transactions/:id",
+      "handler": "transaction.update",
       "config": {
         "policies": []
       }
     },
     {
       "method": "DELETE",
-      "path": "/referral-codes/:id",
-      "handler": "referral-codes.delete",
+      "path": "/transactions/:id",
+      "handler": "transaction.delete",
       "config": {
         "policies": []
       }

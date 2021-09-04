@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "transactions",
+  "info": {
+    "name": "Transaction",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "net_price": {
+      "type": "decimal"
+    },
+    "unb_price": {
+      "type": "decimal"
+    },
+    "col_price": {
+      "type": "decimal"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "course_name": {
+      "type": "string"
+    }
+  }
+}

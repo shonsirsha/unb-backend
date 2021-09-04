@@ -73,18 +73,16 @@ module.exports = {
         duration = 0;
       }
 
-      console.log(duration);
-      console.log("========");
-      console.log(inv);
-      console.log("=========");
-      console.log(res);
+      // console.log(duration);
+      // console.log("========");
+      // console.log(inv);
+      // console.log("=========");
+      // console.log(res);
 
       payload = {
         ...payload,
         data: { ...payload.data, duration_seconds: duration.toString() },
       };
-      console.log("********");
-      console.log(payload);
     } else {
       ctx.send("ignored");
 

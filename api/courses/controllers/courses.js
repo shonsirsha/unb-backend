@@ -460,6 +460,8 @@ module.exports = {
               return m;
             });
           }
+
+          videoObj.duration_seconds = videoObj.video.duration_seconds;
           videoObj.all_missions_completed =
             numberOfMissionsFinished === 0
               ? false
@@ -473,7 +475,7 @@ module.exports = {
           course.videos.map((videoObj, ix) => {
             if (ix !== 0) {
               Object.keys(videoObj.video).map((videoProp) => {
-                if (videoProp !== "title") {
+                if (videoProp !== "title" && videoProp !== "duration_seconds") {
                   delete videoObj.video[videoProp];
                 }
               });
@@ -502,7 +504,7 @@ module.exports = {
           videoObj.missions = [];
           delete videoObj.users_finished_watching;
           Object.keys(videoObj.video).map((videoProp) => {
-            if (videoProp !== "title") {
+            if (videoProp !== "title" && videoProp !== "duration_seconds") {
               delete videoObj.video[videoProp];
             }
           });
@@ -657,9 +659,12 @@ module.exports = {
         delete course.content_creator.id;
       }
       let num_of_course_finished = 0;
+      let totalDuration = 0;
+
       course.videos.map((vidEntity, ix) => {
         let numOfMissions = vidEntity.missions.length;
         let numberOfMissionsFinished = 0;
+        vidEntity.duration_seconds = vidEntity.video.duration_seconds;
         if (ix !== 0) {
           delete vidEntity.video;
         }
@@ -680,11 +685,17 @@ module.exports = {
               : numberOfMissionsFinished === numOfMissions; // if user completed 0 missions, then should be false
 
           if (vidEntity.all_missions_completed) num_of_course_finished++;
+          delete m.users_completed_mission;
         });
+        if (!vidEntity.all_missions_completed) {
+          vidEntity.missions = [];
+        } else {
+          totalDuration += parseFloat(vidEntity.duration_seconds);
+        }
 
         delete vidEntity.users_finished_watching;
-        vidEntity.missions = [];
       });
+      course.all_videos_finished_duration_seconds = totalDuration;
       course.percentage_course_finished = parseInt(
         (num_of_course_finished / course.videos.length) * 100
       );
