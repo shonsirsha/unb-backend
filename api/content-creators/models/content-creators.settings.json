@@ -26,9 +26,12 @@
       "type": "enumeration",
       "enum": [
         "UNB",
-        "KOL",
-        "ADS"
+        "KOL"
       ]
+    },
+    "register_links": {
+      "via": "content_creator",
+      "collection": "register-link"
     }
   }
 }

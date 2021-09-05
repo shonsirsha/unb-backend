@@ -26,6 +26,15 @@
     },
     "course_name": {
       "type": "string"
+    },
+    "content_creator_name": {
+      "type": "string"
+    },
+    "user_register_code": {
+      "type": "string"
+    },
+    "remark": {
+      "type": "string"
     }
   }
 }

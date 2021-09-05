@@ -59,8 +59,8 @@ module.exports = {
       // due to pendingPayment not returning enrolled_users[] and paid_users[]
       //but it does return paid_users_detail[]
       const exactCourse = await strapi.query("courses").find({ id: course.id });
-      const { paid_users, enrolled_users } = exactCourse[0];
-
+      const { paid_users, enrolled_users, content_creator } = exactCourse[0];
+      console.log(content_creator);
       // conditional check just for good measure
       if (payer_email === userEmailFromDb) {
         const updateCourse = await strapi.query("courses").update(
@@ -76,12 +76,32 @@ module.exports = {
         );
 
         if (Object.keys(updateCourse).length > 0) {
-          await strapi.query("waiting-payment").delete({ ex_id: external_id });
-          console.log("success");
-
-          return {
-            message: "ok",
-          };
+          const del = await strapi
+            .query("waiting-payment")
+            .delete({ ex_id: external_id });
+          if (del) {
+            const net_price_arr = external_id.split("-");
+            let net_price = net_price_arr[net_price_arr.length - 1];
+            console.log("success deleting waiting payment");
+            await strapi.query("transaction").create({
+              net_price,
+              unb_price: net_price / 2,
+              col_price: net_price / 2,
+              course_name: course.title,
+              content_creator_name: content_creator.full_name
+                ? content_creator.full_name
+                : "asu",
+              user_email: payer_email,
+            });
+            return {
+              message: "ok",
+            };
+          } else {
+            console.log("failed deleting waiting payment");
+            return ctx.badRequest(null, {
+              message: "Failed  deleting waiting payment",
+            });
+          }
         } else {
           console.log("Failed updating user and course upon payment");
           return ctx.badRequest(null, {

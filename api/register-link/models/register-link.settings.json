@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "register_links",
+  "info": {
+    "name": "RegisterLink",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "link": {
+      "type": "string"
+    },
+    "content_creator": {
+      "via": "register_links",
+      "model": "content-creators"
+    },
+    "code": {
+      "type": "string"
+    },
+    "users": {
+      "via": "register_link",
+      "plugin": "users-permissions",
+      "collection": "user"
+    },
+    "code_type": {
+      "type": "enumeration",
+      "enum": [
+        "AD",
+        "COLLABORATOR"
+      ],
+      "default": "AD",
+      "required": true
+    }
+  }
+}

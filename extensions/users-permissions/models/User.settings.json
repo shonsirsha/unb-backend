@@ -139,6 +139,10 @@
     },
     "blog": {
       "type": "string"
+    },
+    "register_link": {
+      "via": "users",
+      "model": "register-link"
     }
   }
 }
