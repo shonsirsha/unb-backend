@@ -11,7 +11,6 @@ const { default: createStrapi } = require("strapi");
 module.exports = {
   lifecycles: {
     async afterCreate(data) {
-      //todo to  edit and add Full Name
       const course_uuid = uuidv4();
       await strapi.services.courses.update(
         { id: data.id },
