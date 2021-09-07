@@ -26,10 +26,10 @@
     "content_creator_type": {
       "type": "enumeration",
       "enum": [
-        "KOL",
-        "UNB"
+        "COLLABORATOR",
+        "UNBELIEVABLE"
       ],
-      "default": "KOL",
+      "default": "COLLABORATOR",
       "required": true
     },
     "register_links": {

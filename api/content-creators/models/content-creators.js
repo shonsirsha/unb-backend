@@ -12,7 +12,7 @@ module.exports = {
   lifecycles: {
     beforeCreate(data) {
       if (!data.content_creator_type) {
-        data.content_creator_type = "UNB";
+        data.content_creator_type = "UNBELIEVABLE";
       }
     },
     async afterCreate(data) {
@@ -22,7 +22,7 @@ module.exports = {
           uuid: uuidv4(),
         }
       );
-      if (data.content_creator_type === "KOL") {
+      if (data.content_creator_type === "COLLABORATOR") {
         const code = `${slugify(
           data.full_name.toLowerCase()
         )}-${new Date().getFullYear()}-${Date.now().toString().slice(-3)}`;
