@@ -1,6 +1,6 @@
 "use strict";
 const { v4: uuidv4 } = require("uuid");
-
+const slugify = require("slugify");
 const { default: createStrapi } = require("strapi");
 
 /**
@@ -10,13 +10,29 @@ const { default: createStrapi } = require("strapi");
 
 module.exports = {
   lifecycles: {
+    beforeCreate(data) {
+      if (!data.content_creator_type) {
+        data.content_creator_type = "UNB";
+      }
+    },
     async afterCreate(data) {
-      await strapi.services.content_creators.update(
+      await strapi.services["content-creators"].update(
         { id: data.id },
         {
           uuid: uuidv4(),
         }
       );
+      if (data.content_creator_type === "KOL") {
+        const code = `${slugify(
+          data.full_name.toLowerCase()
+        )}-${new Date().getFullYear()}-${Date.now().toString().slice(-3)}`;
+        await strapi.services["register-link"].create({
+          link: `${process.env.FRONTEND_HOST}/daftar?register_code=${code}`,
+          code,
+          code_type: "COLLABORATOR",
+          ["content_creator"]: { id: data.id },
+        });
+      }
     },
   },
 };

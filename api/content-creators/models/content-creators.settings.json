@@ -16,7 +16,8 @@
       "type": "string"
     },
     "uuid": {
-      "type": "uid"
+      "type": "uid",
+      "required": true
     },
     "courses": {
       "via": "content_creator",
@@ -25,9 +26,11 @@
     "content_creator_type": {
       "type": "enumeration",
       "enum": [
-        "UNB",
-        "KOL"
-      ]
+        "KOL",
+        "UNB"
+      ],
+      "default": "KOL",
+      "required": true
     },
     "register_links": {
       "via": "content_creator",
