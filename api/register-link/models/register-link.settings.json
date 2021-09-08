@@ -20,7 +20,8 @@
       "model": "content-creators"
     },
     "code": {
-      "type": "string"
+      "type": "string",
+      "unique": true
     },
     "users": {
       "via": "register_link",

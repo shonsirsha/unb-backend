@@ -193,6 +193,31 @@ module.exports = {
       }
     }
   },
+
+  async find(ctx, next, { populate } = {}) {
+    if (
+      ctx.request.header["x-secret-token"] !==
+      process.env.FIND_USERS_SECRET_TOKEN
+    ) {
+      return ctx.notFound(null, [{ messages: [{ id: "Not Found" }] }]);
+    }
+
+    let users;
+
+    if (_.has(ctx.query, "_q")) {
+      // use core strapi query to search for users
+      users = await strapi
+        .query("user", "users-permissions")
+        .search(ctx.query, populate);
+    } else {
+      users = await strapi.plugins["users-permissions"].services.user.fetchAll(
+        ctx.query,
+        populate
+      );
+    }
+
+    ctx.body = users.map(sanitizeUser);
+  },
 };
 
 const getCourseVideosFromByCourseId = (myArray) => {
