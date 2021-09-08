@@ -1,7 +1,5 @@
 /* eslint-disable no-useless-escape */
-const crypto = require("crypto");
 const _ = require("lodash");
-const grant = require("grant-koa");
 const { sanitizeEntity } = require("strapi-utils");
 
 const emailRegExp =
@@ -30,24 +28,35 @@ module.exports = {
         })
       );
     }
-    let requset_body = ctx.request.body;
-    const { r_c_to_be_checked } = requset_body;
+    let request_body = ctx.request.body;
+    const { r_c_to_be_checked } = request_body;
 
-    if (r_c_to_be_checked !== "") {
+    if (r_c_to_be_checked !== "" || r_c_to_be_checked) {
       let register_code = await strapi
         .query("register-link")
         .findOne({ code: r_c_to_be_checked });
 
       if (register_code) {
-        requset_body = {
-          ...requset_body,
+        request_body = {
+          ...request_body,
           register_link: { id: register_code.id },
+          code_verified: true,
+        };
+      } else {
+        request_body = {
+          ...request_body,
+          code_verified: true,
         };
       }
+    } else {
+      request_body = {
+        ...request_body,
+        code_verified: true,
+      };
     }
 
     const params = {
-      ..._.omit(requset_body, [
+      ..._.omit(request_body, [
         "confirmed",
         "confirmationToken",
         "resetPasswordToken",

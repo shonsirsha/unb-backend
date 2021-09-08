@@ -21,7 +21,8 @@
     },
     "code": {
       "type": "string",
-      "unique": true
+      "unique": true,
+      "required": true
     },
     "users": {
       "via": "register_link",

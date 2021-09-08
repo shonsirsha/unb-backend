@@ -29,6 +29,61 @@ module.exports = {
     ctx.body = sanitizeUser(me);
   },
 
+  async applyCode(ctx) {
+    // will be called on /auth/apply-code
+    //if user just registered using non local provider with a register_code
+    const { r_c_to_be_checked } = ctx.request.body;
+    const { id } = ctx.state.user;
+
+    const user = await strapi.plugins["users-permissions"].services.user.fetch({
+      id,
+    });
+
+    if (!user.code_verified) {
+      if (r_c_to_be_checked === "" || !r_c_to_be_checked) {
+        await strapi.plugins["users-permissions"].services.user.edit(
+          { id },
+          { unverified_register_code: "", code_verified: true }
+        );
+
+        return {
+          message: "no code applied",
+        };
+      }
+
+      let register_code = await strapi
+        .query("register-link")
+        .findOne({ code: r_c_to_be_checked });
+
+      if (register_code) {
+        await strapi.plugins["users-permissions"].services.user.edit(
+          { id },
+          {
+            register_link: register_code.id,
+            unverified_register_code: "",
+            code_verified: true,
+          }
+        );
+        return {
+          message: "code successfully applied",
+        };
+      } else {
+        await strapi.plugins["users-permissions"].services.user.edit(
+          { id },
+          { unverified_register_code: "", code_verified: true }
+        );
+
+        return {
+          message: "no code applied",
+        };
+      }
+    }
+
+    return {
+      message: "code successfully applied (alr verified)",
+    };
+  },
+
   async me(ctx, req) {
     let user = ctx.state.user;
 

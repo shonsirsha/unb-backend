@@ -26,6 +26,15 @@
     },
     {
       "method": "PUT",
+      "path": "/users/apply-code",
+      "handler": "User.applyCode",
+      "config": {
+        "policies": [],
+        "prefix": ""
+      }
+    },
+    {
+      "method": "PUT",
       "path": "/users/password-reset",
       "handler": "User.passwordReset",
       "config": {
