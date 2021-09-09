@@ -53,9 +53,14 @@ module.exports = {
 
       let register_code = await strapi
         .query("register-link")
-        .findOne({ code: r_c_to_be_checked });
+        .findOne({ code: r_c_to_be_checked.toLowerCase() });
 
-      if (register_code) {
+      if (
+        register_code &&
+        ((register_code.code_type === "COLLABORATOR" &&
+          register_code.content_creator) ||
+          (register_code.code_type === "AD" && !register_code.content_creator))
+      ) {
         await strapi.plugins["users-permissions"].services.user.edit(
           { id },
           {

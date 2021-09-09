@@ -34,7 +34,7 @@ module.exports = {
     if (r_c_to_be_checked !== "" || r_c_to_be_checked) {
       let register_code = await strapi
         .query("register-link")
-        .findOne({ code: r_c_to_be_checked });
+        .findOne({ code: r_c_to_be_checked.toLowerCase() });
 
       if (register_code) {
         request_body = {
