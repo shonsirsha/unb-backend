@@ -47,7 +47,7 @@
     },
     "short_desc": {
       "type": "string",
-      "maxLength": 64
+      "maxLength": 500
     },
     "enrolled_users": {
       "via": "enrolled_courses",
@@ -74,6 +74,9 @@
     },
     "announcement": {
       "model": "announcement"
+    },
+    "long_descx": {
+      "type": "richtext"
     }
   }
 }
