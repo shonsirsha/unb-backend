@@ -15,6 +15,10 @@ module.exports = {
         data.code_type = "AD";
       } else if (data.code_type === "COLLABORATOR" && !data.content_creator) {
         throw strapi.errors.badRequest("Please fill in content creator!");
+      } else if (data.code_type === "AD" && data.content_creator) {
+        throw strapi.errors.badRequest(
+          "AD code type can't have content creator!"
+        );
       }
     },
   },
