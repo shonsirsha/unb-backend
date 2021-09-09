@@ -15,6 +15,10 @@ function dateDiffInDays(a, b) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
+const percent = (percent, number) => {
+  return parseFloat(number * (percent / 100));
+};
+
 const insertToSpecificIndex = (arr, index, newItem) => [
   // part of the array before the specified index
   ...arr.slice(0, index),
@@ -52,7 +56,14 @@ module.exports = {
     if (pendingPayment.length > 0) {
       console.log("pending payment found");
 
-      const { user, course } = pendingPayment[0];
+      const { course } = pendingPayment[0];
+
+      const user = await strapi.plugins[
+        "users-permissions"
+      ].services.user.fetch({
+        id: pendingPayment[0].user.id,
+      });
+
       const userEmailFromDb = user.email;
 
       // get this exact course via a standalone query
@@ -80,22 +91,74 @@ module.exports = {
             .query("waiting-payment")
             .delete({ ex_id: external_id });
           if (del) {
-            const net_price_arr = external_id.split("-");
-            let net_price = net_price_arr[net_price_arr.length - 1];
             console.log("success deleting waiting payment");
-            await strapi.query("transaction").create({
+            const net_price_arr = external_id.split("-");
+            //above is = ["slug", "Date.now * 2", netPrice]
+            let net_price = net_price_arr[net_price_arr.length - 1];
+
+            let transactionData = {
               net_price,
-              unb_price: net_price / 2,
-              col_price: net_price / 2,
+              unb_price: 0,
+              col_price: 0,
               course_name: course.title,
               content_creator_name: content_creator.full_name
                 ? content_creator.full_name
-                : "asu",
+                : "NO_NAME_FOUND",
               user_email: payer_email,
-            });
-            return {
-              message: "ok",
+              user_register_code: "",
+              remark: "DEFAULT",
             };
+            console.log("!!!!");
+            if (!user.register_link) {
+              console.log("LALALA");
+              transactionData = {
+                ...transactionData,
+                unb_price: net_price / 2,
+                col_price: net_price / 2,
+              };
+            } else {
+              if (user.register_link.code_type === "AD") {
+                //AD
+                // 80 unb - 20 col
+                transactionData = {
+                  ...transactionData,
+                  unb_price: percent(80, net_price),
+                  col_price: percent(20, net_price),
+                  user_register_code: user.register_link.code,
+                  remark: "AD",
+                };
+              } else if (user.register_link.code_type === "COLLABORATOR") {
+                console.log(user.register_link);
+                if (user.register_link.content_creator === content_creator.id) {
+                  // MATCH
+                  // 20 unb - 80 col
+                  transactionData = {
+                    ...transactionData,
+                    unb_price: percent(20, net_price),
+                    col_price: percent(80, net_price),
+                    user_register_code: user.register_link.code,
+                    remark: "REG_MATCH",
+                  };
+                } else {
+                  //NOT MATCH
+                  //80 unb - 20 col
+                  transactionData = {
+                    ...transactionData,
+                    unb_price: percent(80, net_price),
+                    col_price: percent(20, net_price),
+                    user_register_code: user.register_link.code,
+                    remark: "REG_NOT_MATCH",
+                  };
+                }
+              }
+
+             
+            }
+
+             await strapi.query("transaction").create(transactionData);
+             return {
+               message: "ok",
+             };
           } else {
             console.log("failed deleting waiting payment");
             return ctx.badRequest(null, {
@@ -118,6 +181,13 @@ module.exports = {
         message: "not found",
       });
     }
+  },
+  async xenditCbTest(ctx) {
+    const pendingPayment = await strapi
+      .query("waiting-payment")
+      .find({ ex_id: `improving-your-cardio-3262344762846-350000` });
+
+    return pendingPayment;
   },
   // async xenditCbTest(ctx) {
   //   const { payer_email, external_id } = ctx.request.body;

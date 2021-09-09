@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "prices",
   "info": {
-    "name": "price"
+    "name": "price",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -15,7 +16,8 @@
       "type": "string"
     },
     "price": {
-      "type": "string"
+      "type": "string",
+      "default": "5000"
     }
   }
 }
