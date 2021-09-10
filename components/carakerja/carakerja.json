@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_carakerja_carakerjas",
+  "info": {
+    "name": "carakerja",
+    "icon": "check"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "text"
+    }
+  }
+}

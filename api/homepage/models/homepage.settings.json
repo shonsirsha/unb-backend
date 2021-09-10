@@ -1,0 +1,34 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepages",
+  "info": {
+    "name": "homepage",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "about": {
+      "type": "text"
+    },
+    "carakerja": {
+      "type": "component",
+      "repeatable": true,
+      "component": "carakerja.carakerja"
+    },
+    "professionals": {
+      "type": "component",
+      "repeatable": true,
+      "component": "professionals.professionals"
+    },
+    "testimonials": {
+      "type": "component",
+      "repeatable": true,
+      "component": "testimonials.testimonials"
+    }
+  }
+}

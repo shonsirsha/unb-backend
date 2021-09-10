@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_professionals_professionals",
+  "info": {
+    "name": "professionals",
+    "icon": "smile"
+  },
+  "options": {},
+  "attributes": {
+    "photo": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+}
