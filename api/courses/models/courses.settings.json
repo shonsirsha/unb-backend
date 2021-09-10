@@ -75,6 +75,11 @@
     },
     "long_descx": {
       "type": "richtext"
+    },
+    "features": {
+      "type": "component",
+      "repeatable": true,
+      "component": "features.features"
     }
   }
 }

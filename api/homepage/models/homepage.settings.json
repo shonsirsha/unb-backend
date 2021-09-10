@@ -29,6 +29,16 @@
       "type": "component",
       "repeatable": true,
       "component": "testimonials.testimonials"
+    },
+    "about_image": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
     }
   }
 }

@@ -108,9 +108,8 @@ module.exports = {
               user_register_code: "",
               remark: "DEFAULT",
             };
-            console.log("!!!!");
             if (!user.register_link) {
-              console.log("LALALA");
+              // if user registered without any special link
               transactionData = {
                 ...transactionData,
                 unb_price: net_price / 2,
@@ -151,14 +150,12 @@ module.exports = {
                   };
                 }
               }
-
-             
             }
 
-             await strapi.query("transaction").create(transactionData);
-             return {
-               message: "ok",
-             };
+            await strapi.query("transaction").create(transactionData);
+            return {
+              message: "ok",
+            };
           } else {
             console.log("failed deleting waiting payment");
             return ctx.badRequest(null, {
