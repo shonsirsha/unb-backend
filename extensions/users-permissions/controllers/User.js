@@ -91,7 +91,8 @@ module.exports = {
 
   async me(ctx, req) {
     let user = ctx.state.user;
-    console.log("ASDSAD");
+
+    console.log(ctx.state);
 
     // console.log(ctx.request.header);
 
@@ -100,6 +101,15 @@ module.exports = {
         { messages: [{ id: "No authorization header was found" }] },
       ]);
     }
+
+    const userFetched = await strapi.plugins[
+      "users-permissions"
+    ].services.user.fetch({
+      id: user.id,
+    });
+    const { profile_picture } = userFetched;
+    user = { ...user, profile_picture };
+    console.log(userFetched.profile_picture);
 
     // user.token = ctx.request.header.authorization;
 
@@ -191,7 +201,11 @@ module.exports = {
         key === "confirmed" ||
         key === "blocked" ||
         key === "role" ||
-        key === "email"
+        key === "email" ||
+        key === "created_by" ||
+        key === "updated_by" ||
+        key === "updated_at" ||
+        key === "created_at"
       ) {
         delete updateData[key];
       }

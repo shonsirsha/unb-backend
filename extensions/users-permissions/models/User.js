@@ -6,6 +6,7 @@ module.exports = {
       const user_uuid = uuidv4();
       data.username = user_uuid;
       data.uuid = user_uuid;
+      data.id = user_uuid;
     },
 
     async afterCreate(data) {
