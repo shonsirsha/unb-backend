@@ -150,6 +150,9 @@
     "code_verified": {
       "type": "boolean",
       "default": false
+    },
+    "full_address": {
+      "type": "string"
     }
   }
 }

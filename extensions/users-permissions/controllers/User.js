@@ -91,6 +91,7 @@ module.exports = {
 
   async me(ctx, req) {
     let user = ctx.state.user;
+    console.log("ASDSAD");
 
     // console.log(ctx.request.header);
 
@@ -178,6 +179,26 @@ module.exports = {
       ...ctx.request.body,
     };
 
+    for (var key in updateData) {
+      if (
+        key === "provider" ||
+        key === "wishlist" ||
+        key === "uuid" ||
+        key === "username" ||
+        key === "referral_code" ||
+        key === "register_link" ||
+        key === "code_verified" ||
+        key === "confirmed" ||
+        key === "blocked" ||
+        key === "role" ||
+        key === "email"
+      ) {
+        delete updateData[key];
+      }
+    }
+
+    console.log(updateData);
+
     if (_.has(ctx.request.body, "password") && password === user.password) {
       delete updateData.password;
     }
@@ -255,13 +276,6 @@ module.exports = {
   },
 
   async find(ctx, next, { populate } = {}) {
-    if (
-      ctx.request.header["x-secret-token"] !==
-      process.env.FIND_USERS_SECRET_TOKEN
-    ) {
-      return ctx.notFound(null, [{ messages: [{ id: "Not Found" }] }]);
-    }
-
     let users;
 
     if (_.has(ctx.query, "_q")) {
