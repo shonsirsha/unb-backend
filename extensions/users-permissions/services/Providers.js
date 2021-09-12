@@ -203,12 +203,10 @@ const getProfile = async (provider, query, callback) => {
     }
     case "google": {
       const google = purest({ provider: "google", config: purestConfig });
-      console.log(access_token);
       google
         .get("https://www.googleapis.com/oauth2/v3/userinfo")
         .auth(access_token)
         .request((err, res, body) => {
-          console.log(body);
           if (err) {
             callback(err);
           } else {

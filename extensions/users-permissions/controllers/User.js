@@ -92,10 +92,6 @@ module.exports = {
   async me(ctx, req) {
     let user = ctx.state.user;
 
-    console.log(ctx.state);
-
-    // console.log(ctx.request.header);
-
     if (!user) {
       return ctx.badRequest(null, [
         { messages: [{ id: "No authorization header was found" }] },
@@ -109,7 +105,6 @@ module.exports = {
     });
     const { profile_picture } = userFetched;
     user = { ...user, profile_picture };
-    console.log(userFetched.profile_picture);
 
     // user.token = ctx.request.header.authorization;
 
@@ -212,8 +207,6 @@ module.exports = {
       }
     }
 
-    console.log(updateData);
-
     if (_.has(ctx.request.body, "password") && password === user.password) {
       delete updateData.password;
     }
@@ -258,7 +251,6 @@ module.exports = {
     const user = await strapi
       .query("user", "users-permissions")
       .findOne({ username: params.identifier });
-    console.log(params.identifier);
     if (user.uuid === uuid) {
       // Validate given password against user query result password
       const validPassword = await strapi.plugins[
@@ -266,7 +258,6 @@ module.exports = {
       ].services.user.validatePassword(params.password, user.password);
 
       if (!validPassword) {
-        console.log("SX");
         return ctx.badRequest(null, {
           error: "wrong.password",
         });
