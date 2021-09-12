@@ -205,7 +205,8 @@ module.exports = {
         key === "created_by" ||
         key === "updated_by" ||
         key === "updated_at" ||
-        key === "created_at"
+        key === "created_at" ||
+        key === "profile_picture"
       ) {
         delete updateData[key];
       }

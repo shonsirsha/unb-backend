@@ -28,13 +28,13 @@ module.exports = {
       refId: ctx.state.user.id,
       source: "users-permissions",
       field: "profile_picture",
+      path: `profile-pictures/${ctx.state.user.uuid}`,
     };
 
     const user = await strapi.plugins["users-permissions"].services.user.fetch({
       id: ctx.state.user.id,
     });
     let profilPicId;
-    console.log(user);
     if (user && user.profile_picture) {
       profilPicId = user.profile_picture.id;
       const currentProfilePic = await strapi.plugins[
