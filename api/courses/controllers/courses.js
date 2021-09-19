@@ -789,6 +789,7 @@ module.exports = {
       return course;
     });
     let formedArr = Promise.all(userCourseFixed);
+
     return formedArr;
   },
 };
