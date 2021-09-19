@@ -17,7 +17,7 @@ module.exports = {
         throw strapi.errors.badRequest("Please fill in content creator!");
       } else if (data.code_type === "AD" && data.content_creator) {
         throw strapi.errors.badRequest(
-          "AD code type can't have content creator!"
+          "'AD' type code can't have content creator!"
         );
       }
     },
