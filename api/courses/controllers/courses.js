@@ -239,14 +239,37 @@ module.exports = {
     // this endpoint does:
     //1 . Call xendit API to create a new invoice_url
     //2. Create a new entry of waiting_payment with the corresponding: user, course, external_id, and invoice_url
-    const {
-      amount,
-      external_id,
-      payer_email,
-      description,
-      redirect_url,
-      courseId,
-    } = ctx.request.body;
+    const { courseId } = ctx.request.body;
+
+    let detailedCourse = await strapi
+      .query("courses")
+      .findOne({ id: courseId });
+
+    if (!detailedCourse) {
+      return ctx.badRequest(null, {
+        message: "not found",
+      });
+    }
+
+    const userPaid = detailedCourse.paid_users.some((user) => {
+      return user.uuid === ctx.state.user.uuid;
+    });
+    if (userPaid) {
+      return ctx.badRequest(null, {
+        message: "invoice can't be issued",
+      });
+    }
+
+    console.log(detailedCourse);
+
+    const redirect_url = `${process.env.FRONTEND_HOST}/redir/${detailedCourse.slug}`;
+    const amount = detailedCourse.course_price
+      ? parseFloat(detailedCourse.course_price.price) + 3000
+      : 5000 - 3000;
+    const { email } = ctx.state.user;
+    const external_id = `${detailedCourse.slug}-${Date.now() * 2}-${
+      detailedCourse.course_price.price
+    }`;
     //external_id is reference ID
     const res = await fetch(`https://api.xendit.co/v2/invoices`, {
       method: "POST",
@@ -259,8 +282,8 @@ module.exports = {
       body: JSON.stringify({
         external_id,
         amount,
-        payer_email,
-        description,
+        payer_email: email,
+        description: `Beli kelas ${detailedCourse.title}`,
         failure_redirect_url: redirect_url,
         success_redirect_url: redirect_url,
       }),
