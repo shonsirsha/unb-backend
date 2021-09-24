@@ -118,57 +118,56 @@ module.exports = {
                 ...transactionData,
                 unb_price: net_price,
                 col_price: 0,
-                remark: "COLLABORATOR_IS_UNB"
+                remark: "COLLABORATOR_IS_UNB",
               };
             } else {
-                if (!user.register_link) {
-                  // if user registered without any special link
+              if (!user.register_link) {
+                // if user registered without any special link
+                transactionData = {
+                  ...transactionData,
+                  unb_price: net_price / 2,
+                  col_price: net_price / 2,
+                };
+              } else {
+                if (user.register_link.code_type === "AD") {
+                  //AD
+                  // 80 unb - 20 col
                   transactionData = {
                     ...transactionData,
-                    unb_price: net_price / 2,
-                    col_price: net_price / 2,
+                    unb_price: percent(80, net_price),
+                    col_price: percent(20, net_price),
+                    user_register_code: user.register_link.code,
+                    remark: "AD",
                   };
-                } else {
-                  if (user.register_link.code_type === "AD") {
-                    //AD
-                    // 80 unb - 20 col
+                } else if (user.register_link.code_type === "COLLABORATOR") {
+                  console.log(user.register_link);
+                  if (
+                    user.register_link.content_creator === content_creator.id
+                  ) {
+                    // MATCH
+                    // 20 unb - 80 col
+                    transactionData = {
+                      ...transactionData,
+                      unb_price: percent(20, net_price),
+                      col_price: percent(80, net_price),
+                      user_register_code: user.register_link.code,
+                      remark: "REG_MATCH",
+                    };
+                  } else {
+                    //NOT MATCH
+                    //80 unb - 20 col
                     transactionData = {
                       ...transactionData,
                       unb_price: percent(80, net_price),
                       col_price: percent(20, net_price),
                       user_register_code: user.register_link.code,
-                      remark: "AD",
+                      remark: "REG_NOT_MATCH",
                     };
-                  } else if (user.register_link.code_type === "COLLABORATOR") {
-                    console.log(user.register_link);
-                    if (
-                      user.register_link.content_creator === content_creator.id
-                    ) {
-                      // MATCH
-                      // 20 unb - 80 col
-                      transactionData = {
-                        ...transactionData,
-                        unb_price: percent(20, net_price),
-                        col_price: percent(80, net_price),
-                        user_register_code: user.register_link.code,
-                        remark: "REG_MATCH",
-                      };
-                    } else {
-                      //NOT MATCH
-                      //80 unb - 20 col
-                      transactionData = {
-                        ...transactionData,
-                        unb_price: percent(80, net_price),
-                        col_price: percent(20, net_price),
-                        user_register_code: user.register_link.code,
-                        remark: "REG_NOT_MATCH",
-                      };
-                    }
                   }
                 }
-
+              }
             }
-          
+
             await strapi.query("transaction").create(transactionData);
             return {
               message: "ok",
@@ -293,6 +292,7 @@ module.exports = {
       return user.uuid === ctx.state.user.uuid;
     });
     if (userPaid) {
+      console.log("paid");
       return ctx.badRequest(null, {
         message: "invoice can't be issued",
       });
