@@ -29,7 +29,6 @@
         "COLLABORATOR",
         "UNBELIEVABLE"
       ],
-      "default": "COLLABORATOR",
       "required": true
     },
     "register_links": {

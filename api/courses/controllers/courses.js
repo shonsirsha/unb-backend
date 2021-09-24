@@ -74,6 +74,9 @@ module.exports = {
       console.log(content_creator);
       // conditional check just for good measure
       if (payer_email === userEmailFromDb) {
+        console.log("payer email is user email");
+        console.log("updating course");
+
         const updateCourse = await strapi.query("courses").update(
           { id: course.id },
           {
@@ -86,6 +89,8 @@ module.exports = {
           }
         );
 
+        console.log("course updated");
+
         if (Object.keys(updateCourse).length > 0) {
           const del = await strapi
             .query("waiting-payment")
@@ -95,7 +100,6 @@ module.exports = {
             const net_price_arr = external_id.split("-");
             //above is = ["slug", "Date.now * 2", netPrice]
             let net_price = net_price_arr[net_price_arr.length - 1];
-
             let transactionData = {
               net_price,
               unb_price: 0,
@@ -104,54 +108,67 @@ module.exports = {
               content_creator_name: content_creator.full_name
                 ? content_creator.full_name
                 : "NO_NAME_FOUND",
+              content_creator_type: content_creator.content_creator_type,
               user_email: payer_email,
               user_register_code: "",
               remark: "DEFAULT",
             };
-            if (!user.register_link) {
-              // if user registered without any special link
+            if (content_creator.content_creator_type === "UNBELIEVABLE") {
               transactionData = {
                 ...transactionData,
-                unb_price: net_price / 2,
-                col_price: net_price / 2,
+                unb_price: net_price,
+                col_price: 0,
+                remark: "COLLABORATOR_IS_UNB"
               };
             } else {
-              if (user.register_link.code_type === "AD") {
-                //AD
-                // 80 unb - 20 col
-                transactionData = {
-                  ...transactionData,
-                  unb_price: percent(80, net_price),
-                  col_price: percent(20, net_price),
-                  user_register_code: user.register_link.code,
-                  remark: "AD",
-                };
-              } else if (user.register_link.code_type === "COLLABORATOR") {
-                console.log(user.register_link);
-                if (user.register_link.content_creator === content_creator.id) {
-                  // MATCH
-                  // 20 unb - 80 col
+                if (!user.register_link) {
+                  // if user registered without any special link
                   transactionData = {
                     ...transactionData,
-                    unb_price: percent(20, net_price),
-                    col_price: percent(80, net_price),
-                    user_register_code: user.register_link.code,
-                    remark: "REG_MATCH",
+                    unb_price: net_price / 2,
+                    col_price: net_price / 2,
                   };
                 } else {
-                  //NOT MATCH
-                  //80 unb - 20 col
-                  transactionData = {
-                    ...transactionData,
-                    unb_price: percent(80, net_price),
-                    col_price: percent(20, net_price),
-                    user_register_code: user.register_link.code,
-                    remark: "REG_NOT_MATCH",
-                  };
+                  if (user.register_link.code_type === "AD") {
+                    //AD
+                    // 80 unb - 20 col
+                    transactionData = {
+                      ...transactionData,
+                      unb_price: percent(80, net_price),
+                      col_price: percent(20, net_price),
+                      user_register_code: user.register_link.code,
+                      remark: "AD",
+                    };
+                  } else if (user.register_link.code_type === "COLLABORATOR") {
+                    console.log(user.register_link);
+                    if (
+                      user.register_link.content_creator === content_creator.id
+                    ) {
+                      // MATCH
+                      // 20 unb - 80 col
+                      transactionData = {
+                        ...transactionData,
+                        unb_price: percent(20, net_price),
+                        col_price: percent(80, net_price),
+                        user_register_code: user.register_link.code,
+                        remark: "REG_MATCH",
+                      };
+                    } else {
+                      //NOT MATCH
+                      //80 unb - 20 col
+                      transactionData = {
+                        ...transactionData,
+                        unb_price: percent(80, net_price),
+                        col_price: percent(20, net_price),
+                        user_register_code: user.register_link.code,
+                        remark: "REG_NOT_MATCH",
+                      };
+                    }
+                  }
                 }
-              }
-            }
 
+            }
+          
             await strapi.query("transaction").create(transactionData);
             return {
               message: "ok",
@@ -169,6 +186,7 @@ module.exports = {
           });
         }
       } else {
+        conosle.log("F");
         return ctx.badRequest(null, {
           message: "not found",
         });
@@ -180,11 +198,30 @@ module.exports = {
     }
   },
   async xenditCbTest(ctx) {
-    const pendingPayment = await strapi
-      .query("waiting-payment")
-      .find({ ex_id: `improving-your-cardio-3262344762846-350000` });
-
-    return pendingPayment;
+    // const { external_id } = ctx.request.body;
+    // const pendingPayment = await strapi
+    //   .query("waiting-payment")
+    //   .find({ ex: external_id });
+    // // const { course } = pendingPayment[0];
+    // console.log(pendingPayment);
+    // return;
+    // const user = await strapi.plugins["users-permissions"].services.user.fetch({
+    //   id: pendingPayment[0].user.id,
+    // });
+    // const userEmailFromDb = user.email;
+    // const exactCourse = await strapi.query("courses").find({ id: course.id });
+    // const { paid_users, enrolled_users, content_creator } = exactCourse[0];
+    // const updateCourse = await strapi.query("courses").update(
+    //   { id: course.id },
+    //   {
+    //     paid_users_detail: [
+    //       ...course.paid_users_detail,
+    //       { date: new Date(), user },
+    //     ],
+    //     paid_users: [...paid_users, user],
+    //     enrolled_users: [...enrolled_users, user],
+    //   }
+    // );
   },
   // async xenditCbTest(ctx) {
   //   const { payer_email, external_id } = ctx.request.body;
@@ -235,6 +272,7 @@ module.exports = {
   //     });
   //   }
   // },
+
   async xendit(ctx) {
     // this endpoint does:
     //1 . Call xendit API to create a new invoice_url

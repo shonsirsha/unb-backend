@@ -11,6 +11,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "@sentry/node": "^6.13.2",
     "knex": "0.21.18",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.1",

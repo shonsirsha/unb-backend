@@ -23,18 +23,18 @@ const checkVideos = (data) => {
 
 module.exports = {
   lifecycles: {
-    async beforeUpdate(_, data) {
-      if (Object.keys(data).length > 1) {
-        // this is on "saving"
-        if (!data.announcement || !data.course_price) {
-          throw strapi.errors.badRequest(
-            "A course must have an announcement and a price"
-          );
-        }
+    // async beforeUpdate(_, data) {
+    //   if (Object.keys(data).length > 1) {
+    //     // this is on "saving"
+    //     if (!data.announcement || !data.course_price) {
+    //       throw strapi.errors.badRequest(
+    //         "A course must have an announcement and a price"
+    //       );
+    //     }
 
-        checkVideos(data);
-      }
-    },
+    //     checkVideos(data);
+    //   }
+    // },
 
     async beforeCreate(data) {
       checkVideos(data);

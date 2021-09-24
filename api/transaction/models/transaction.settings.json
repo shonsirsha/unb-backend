@@ -35,6 +35,9 @@
     },
     "remark": {
       "type": "string"
+    },
+    "content_creator_type": {
+      "type": "string"
     }
   }
 }
