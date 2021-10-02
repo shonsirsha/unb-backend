@@ -151,6 +151,10 @@
     },
     "full_address": {
       "type": "string"
+    },
+    "mailchimp_set": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
