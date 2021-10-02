@@ -1,6 +1,8 @@
 "use strict";
 const { sanitizeEntity } = require("strapi-utils");
 const fetch = require("node-fetch");
+const client = require("@mailchimp/mailchimp_marketing");
+const md5 = require("md5");
 
 /**
  * Read the documentation (https://strapi.io/documentation/developer-docs/latest/development/backend-customization.html#core-controllers)
@@ -27,6 +29,29 @@ const insertToSpecificIndex = (arr, index, newItem) => [
   // part of the array after the specified index
   ...arr.slice(index),
 ];
+
+const mailChimpConfigSetup = () => {
+  client.setConfig({
+    apiKey: process.env.MAILCHIMP_API,
+    server: process.env.MAILCHIMP_SERVER_PREFIX,
+  });
+};
+
+const toMailchimp = async (payer_email) => {
+  const subscriber_hash = md5(payer_email);
+  console.log(subscriber_hash);
+  const response = await client.lists.updateListMemberTags(
+    process.env.MAILCHIMP_LIST_ID,
+    subscriber_hash,
+    {
+      tags: [
+        { name: "paid", status: "active" },
+        { name: "free", status: "inactive" },
+      ],
+    }
+  );
+  return { status: "ok" };
+};
 
 module.exports = {
   async xenditCb(ctx) {
@@ -89,6 +114,16 @@ module.exports = {
           }
         );
 
+        if (user.paid_courses.length === 0 || !user.paid_courses) {
+          console.log("Updating MC to be 'paid'");
+          mailChimpConfigSetup();
+          await toMailchimp(payer_email);
+          console.log("user has been updated to 'paid' (MC)");
+        } else {
+          console.log(
+            "No need to update MC because it's already set as 'paid'"
+          );
+        }
         console.log("course updated");
 
         if (Object.keys(updateCourse).length > 0) {
@@ -197,6 +232,9 @@ module.exports = {
     }
   },
   async xenditCbTest(ctx) {
+    // const { payer_email } = ctx.request.body;
+    // mailChimpConfigSetup();
+    // return await toMailchimp(payer_email);
     // const { external_id } = ctx.request.body;
     // const pendingPayment = await strapi
     //   .query("waiting-payment")

@@ -13,32 +13,26 @@ const mailChimpConfigSetup = () => {
   });
 };
 
-const toMailchimp = async (type, user) => {
+const toMailchimp = async (user) => {
   const email_address = user.email;
   console.log(email_address);
   console.log(user.first_name);
   console.log(user.last_name);
   console.log(user.phone_number);
 
-  let response = null;
-  switch (type) {
-    //creating a user with a a'free' tag
-    case 0:
-      response = await client.lists.addListMember(
-        process.env.MAILCHIMP_LIST_ID,
-        {
-          email_address,
-          status: "subscribed",
-          tags: ["free"],
-          merge_fields: {
-            FNAME: user.first_name,
-            LNAME: user.last_name,
-            PHONE: user.phone_number ? user.phone_number : "",
-          },
-        }
-      );
-      break;
-  }
+  const response = await client.lists.addListMember(
+    process.env.MAILCHIMP_LIST_ID,
+    {
+      email_address,
+      status: "subscribed",
+      tags: ["free"],
+      merge_fields: {
+        FNAME: user.first_name,
+        LNAME: user.last_name,
+        PHONE: user.phone_number ? user.phone_number : "",
+      },
+    }
+  );
   return response;
 };
 
@@ -134,7 +128,7 @@ module.exports = {
 
     if (userFetched && !userFetched.mailchimp_set) {
       mailChimpConfigSetup();
-      await toMailchimp(0, ctx.state.user);
+      await toMailchimp(ctx.state.user);
 
       return await strapi.plugins["users-permissions"].services.user.edit(
         { id: ctx.state.user.id },

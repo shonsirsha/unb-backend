@@ -17,7 +17,7 @@
       }
     },
     {
-      "method": "GET",
+      "method": "POST",
       "path": "/xendit-dada",
       "handler": "courses.xenditCbTest",
       "config": {
