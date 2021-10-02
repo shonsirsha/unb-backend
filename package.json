@@ -11,6 +11,7 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "@mailchimp/mailchimp_marketing": "^3.0.66",
     "@sentry/node": "^6.13.2",
     "knex": "0.21.18",
     "mysql": "^2.18.1",

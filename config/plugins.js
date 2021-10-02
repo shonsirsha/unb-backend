@@ -3,11 +3,8 @@ module.exports = ({ env }) => ({
   upload: {
     provider: "aws-s3",
     providerOptions: {
-      accessKeyId: env("S3_ACCESS_KEY", "AKIAR542CBFUCLJTNUDE"),
-      secretAccessKey: env(
-        "S3_SECRET_ACCESS_KEY",
-        "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"
-      ),
+      accessKeyId: env("S3_ACCESS_KEY"),
+      secretAccessKey: env("S3_SECRET_ACCESS_KEY"),
       region: "ap-southeast-1",
       params: {
         Bucket: "unb-dev",

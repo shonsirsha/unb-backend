@@ -1,12 +1,46 @@
 const { sanitizeEntity } = require("strapi-utils");
-const { prependOnceListener } = require("strapi-utils/lib/logger");
-const courses = require("../../../api/courses/services/courses");
 const _ = require("lodash");
+const client = require("@mailchimp/mailchimp_marketing");
 
 const sanitizeUser = (user) =>
   sanitizeEntity(user, {
     model: strapi.query("user", "users-permissions").model,
   });
+const mailChimpConfigSetup = () => {
+  client.setConfig({
+    apiKey: process.env.MAILCHIMP_API,
+    server: process.env.MAILCHIMP_SERVER_PREFIX,
+  });
+};
+
+const toMailchimp = async (type, user) => {
+  const email_address = user.email;
+  console.log(email_address);
+  console.log(user.first_name);
+  console.log(user.last_name);
+  console.log(user.phone_number);
+
+  let response = null;
+  switch (type) {
+    //creating a user with a a'free' tag
+    case 0:
+      response = await client.lists.addListMember(
+        process.env.MAILCHIMP_LIST_ID,
+        {
+          email_address,
+          status: "subscribed",
+          tags: ["free"],
+          merge_fields: {
+            FNAME: user.first_name,
+            LNAME: user.last_name,
+            PHONE: user.phone_number ? user.phone_number : "",
+          },
+        }
+      );
+      break;
+  }
+  return response;
+};
 
 module.exports = {
   async customMe(ctx) {
@@ -87,6 +121,30 @@ module.exports = {
     return {
       message: "code successfully applied (alr verified)",
     };
+  },
+
+  async mailchimpRegister(ctx) {
+    //register a user to mailchimp
+    // (adding a contact with a tag of 'free' to the Audience)
+    const userFetched = await strapi.plugins[
+      "users-permissions"
+    ].services.user.fetch({
+      id: ctx.state.user.id,
+    });
+
+    if (userFetched && !userFetched.mailchimp_set) {
+      mailChimpConfigSetup();
+      await toMailchimp(0, ctx.state.user);
+
+      return await strapi.plugins["users-permissions"].services.user.edit(
+        { id: ctx.state.user.id },
+        { mailchimp_set: true }
+      );
+    }
+
+    return ctx.badRequest(null, {
+      message: "not found",
+    });
   },
 
   async me(ctx, req) {

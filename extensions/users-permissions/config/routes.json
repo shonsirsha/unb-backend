@@ -16,6 +16,15 @@
       }
     },
     {
+      "method": "POST",
+      "path": "/users/mailchimp-register",
+      "handler": "User.mailchimpRegister",
+      "config": {
+        "policies": [],
+        "prefix": ""
+      }
+    },
+    {
       "method": "PUT",
       "path": "/users/me",
       "handler": "User.updateMe",
