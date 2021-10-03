@@ -87,8 +87,11 @@ module.exports = {
         register_code &&
         ((register_code.code_type === "COLLABORATOR" &&
           register_code.content_creator) ||
-          (register_code.code_type === "AD" && !register_code.content_creator))
+          (register_code.code_type === "AD" &&
+            !register_code.content_creator)) &&
+        register_code.active
       ) {
+        console.log(register_code.active);
         await strapi.plugins["users-permissions"].services.user.edit(
           { id },
           {

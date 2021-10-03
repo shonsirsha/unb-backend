@@ -37,6 +37,10 @@
       ],
       "default": "AD",
       "required": true
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

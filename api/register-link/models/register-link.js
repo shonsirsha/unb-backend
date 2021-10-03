@@ -11,6 +11,7 @@ module.exports = {
       const code = data.code.toLowerCase();
       data.code = code;
       data.link = `${process.env.FRONTEND_HOST}/daftar?register_code=${code}`;
+      data.active = true;
       if (!data.code_type) {
         data.code_type = "AD";
       } else if (data.code_type === "COLLABORATOR" && !data.content_creator) {

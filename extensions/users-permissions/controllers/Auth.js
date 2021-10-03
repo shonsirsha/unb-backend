@@ -36,7 +36,7 @@ module.exports = {
         .query("register-link")
         .findOne({ code: r_c_to_be_checked.toLowerCase() });
 
-      if (register_code) {
+      if (register_code && register_code.active) {
         request_body = {
           ...request_body,
           register_link: { id: register_code.id },
