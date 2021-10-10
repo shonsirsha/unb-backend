@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "videos",
+  "info": {
+    "name": "videos",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "video_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    }
+  }
+}
