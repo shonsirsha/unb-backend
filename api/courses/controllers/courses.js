@@ -659,9 +659,9 @@ module.exports = {
         if (!userPaid) {
           course.videos.map((videoObj, ix) => {
             if (ix !== 0) {
-              Object.keys(videoObj.video).map((videoProp) => {
+              Object.keys(videoObj.bunny_video).map((videoProp) => {
                 if (videoProp !== "title" && videoProp !== "duration") {
-                  delete videoObj.video[videoProp];
+                  delete videoObj.bunny_video[videoProp];
                 }
               });
             }
@@ -688,9 +688,9 @@ module.exports = {
           videoObj.finished_watching = false;
           videoObj.missions = [];
           delete videoObj.users_finished_watching;
-          Object.keys(videoObj.video).map((videoProp) => {
+          Object.keys(videoObj.bunny_video).map((videoProp) => {
             if (videoProp !== "title" && videoProp !== "duration") {
-              delete videoObj.video[videoProp];
+              delete videoObj.bunny_video[videoProp];
             }
           });
         });
