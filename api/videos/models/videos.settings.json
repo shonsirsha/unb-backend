@@ -17,6 +17,16 @@
     },
     "title": {
       "type": "string"
+    },
+    "duration": {
+      "type": "string"
+    },
+    "upload_id": {
+      "type": "uid",
+      "required": true
+    },
+    "thumbnail_url": {
+      "type": "string"
     }
   }
 }

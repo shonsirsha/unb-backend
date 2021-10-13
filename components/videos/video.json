@@ -10,10 +10,6 @@
     "day_title": {
       "type": "string"
     },
-    "video": {
-      "plugin": "mux-video-uploader",
-      "model": "mux-asset"
-    },
     "users_finished_watching": {
       "plugin": "users-permissions",
       "collection": "user"
@@ -22,6 +18,9 @@
       "type": "component",
       "repeatable": true,
       "component": "mission.mission"
+    },
+    "bunny_video": {
+      "model": "videos"
     }
   }
 }

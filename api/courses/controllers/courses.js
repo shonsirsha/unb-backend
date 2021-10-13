@@ -647,7 +647,6 @@ module.exports = {
             });
           }
 
-          videoObj.duration_seconds = videoObj.video.duration_seconds;
           videoObj.all_missions_completed =
             numberOfMissionsFinished === 0
               ? false
@@ -661,7 +660,7 @@ module.exports = {
           course.videos.map((videoObj, ix) => {
             if (ix !== 0) {
               Object.keys(videoObj.video).map((videoProp) => {
-                if (videoProp !== "title" && videoProp !== "duration_seconds") {
+                if (videoProp !== "title" && videoProp !== "duration") {
                   delete videoObj.video[videoProp];
                 }
               });
@@ -690,7 +689,7 @@ module.exports = {
           videoObj.missions = [];
           delete videoObj.users_finished_watching;
           Object.keys(videoObj.video).map((videoProp) => {
-            if (videoProp !== "title" && videoProp !== "duration_seconds") {
+            if (videoProp !== "title" && videoProp !== "duration") {
               delete videoObj.video[videoProp];
             }
           });
@@ -848,9 +847,10 @@ module.exports = {
       let totalDuration = 0;
 
       course.videos.map((vidEntity, ix) => {
+        console.log(vidEntity);
         let numOfMissions = vidEntity.missions.length;
         let numberOfMissionsFinished = 0;
-        vidEntity.duration_seconds = vidEntity.video.duration_seconds;
+        vidEntity.duration_seconds = vidEntity.bunny_video.duration;
         if (ix !== 0) {
           delete vidEntity.video;
         }
