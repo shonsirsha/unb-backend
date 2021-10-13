@@ -847,7 +847,6 @@ module.exports = {
       let totalDuration = 0;
 
       course.videos.map((vidEntity, ix) => {
-        console.log(vidEntity);
         let numOfMissions = vidEntity.missions.length;
         let numberOfMissionsFinished = 0;
         vidEntity.duration_seconds = vidEntity.bunny_video.duration;
