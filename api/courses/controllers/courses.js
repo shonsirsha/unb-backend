@@ -509,14 +509,15 @@ module.exports = {
       }
       return m;
     });
-    const result = await strapi.query("courses").update(
-      { uuid },
+
+    const res = await strapi.query("grouped-videos").update(
+      { id: course[0].grouped_videos.id },
       {
         videos: insertToSpecificIndex(otherVids, finishedVidIx, targetVid[0]),
       }
     );
 
-    return result;
+    return res;
   },
   async removeWishlistCourse(ctx) {
     const { id } = ctx.state.user;
