@@ -64,12 +64,6 @@
       "repeatable": true,
       "component": "paid-users-detail.paid-users-detail"
     },
-    "course_price": {
-      "model": "price"
-    },
-    "announcement": {
-      "model": "announcement"
-    },
     "long_descx": {
       "type": "richtext"
     },
@@ -80,6 +74,14 @@
     },
     "grouped_videos": {
       "model": "grouped-videos",
+      "via": "course"
+    },
+    "announcement": {
+      "model": "announcement",
+      "via": "course"
+    },
+    "course_price": {
+      "model": "price",
       "via": "course"
     }
   }

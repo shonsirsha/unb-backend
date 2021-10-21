@@ -61,6 +61,11 @@ module.exports = {
         course_name: data.title,
         course: data.id,
       });
+
+      await strapi.services["grouped-videos"].create({
+        course_name: data.title,
+        course: data.id,
+      });
     },
   },
 };

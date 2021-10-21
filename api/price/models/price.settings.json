@@ -18,6 +18,10 @@
     "price": {
       "type": "string",
       "default": "5000"
+    },
+    "course": {
+      "via": "course_price",
+      "model": "courses"
     }
   }
 }
