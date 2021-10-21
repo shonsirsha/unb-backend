@@ -412,35 +412,39 @@ module.exports = {
     const { uuid, videoId } = ctx.params;
 
     const course = await strapi.query("courses").find({ uuid });
+
     const userEnrolled = course[0].enrolled_users.some((user) => {
       return user.uuid === ctx.state.user.uuid;
     });
     if (!userEnrolled) {
       return "Not Found";
     }
+
+    console.log(course[0].grouped_videos);
+    console.log(videoId);
+
     let finishedVidIx = 0;
-    let finishedVid = course[0].videos.filter((v, ix) => {
+    let finishedVid = course[0].grouped_videos.videos.filter((v, ix) => {
       if (v.id === parseInt(videoId)) {
         finishedVidIx = ix;
         return true;
       }
     });
-    let otherVids = course[0].videos.filter((v) => {
+    let otherVids = course[0].grouped_videos.videos.filter((v) => {
       return v.id !== parseInt(videoId);
     });
     finishedVid[0].users_finished_watching = [
       ...finishedVid[0].users_finished_watching,
       { id },
     ];
-
-    const result = await strapi.query("courses").update(
-      { uuid },
+    const res = await strapi.query("grouped-videos").update(
+      { id: course[0].grouped_videos.id },
       {
         videos: insertToSpecificIndex(otherVids, finishedVidIx, finishedVid[0]),
       }
     );
 
-    return result;
+    return res;
   },
   async currentMission(ctx) {
     //uuid is course's uuid,
@@ -449,19 +453,20 @@ module.exports = {
 
     let course = await strapi.query("courses").find({ uuid });
 
-    course[0].videos = course[0].videos.filter(
+    course[0].grouped_videos.videos = course[0].grouped_videos.videos.filter(
       (vidProp) => vidProp.id === parseInt(videoId)
     );
 
-    const finishedWatching = course[0].videos[0].users_finished_watching.some(
-      (user) => {
-        return user.uuid === ctx.state.user.uuid;
-      }
-    );
+    const finishedWatching =
+      course[0].grouped_videos.videos[0].users_finished_watching.some(
+        (user) => {
+          return user.uuid === ctx.state.user.uuid;
+        }
+      );
 
     if (!finishedWatching) return [];
 
-    const missions = course[0].videos[0].missions.map((m) => {
+    const missions = course[0].grouped_videos.videos[0].missions.map((m) => {
       delete m.users_completed_mission;
       return m;
     });
@@ -485,7 +490,7 @@ module.exports = {
 
     const { missionIds } = ctx.request.body;
     let finishedVidIx = 0;
-    let targetVid = course[0].videos.filter((vidProp, ix) => {
+    let targetVid = course[0].grouped_videos.videos.filter((vidProp, ix) => {
       if (vidProp.id === parseInt(videoId)) {
         finishedVidIx = ix;
         return true;
@@ -494,7 +499,7 @@ module.exports = {
 
     console.log(targetVid);
 
-    let otherVids = course[0].videos.filter((v) => {
+    let otherVids = course[0].grouped_videos.videos.filter((v) => {
       return v.id !== parseInt(videoId);
     });
 
@@ -623,7 +628,7 @@ module.exports = {
           return user.uuid === ctx.state.user.uuid;
         });
 
-        course.videos.map((videoObj) => {
+        course.grouped_videos.videos.map((videoObj) => {
           let numberOfMissionsFinished = 0;
           const finishedWatching = videoObj.users_finished_watching.some(
             (user) => {
@@ -657,7 +662,7 @@ module.exports = {
         course.enrolled = userEnrolled;
         course.paid = userPaid;
         if (!userPaid) {
-          course.videos.map((videoObj, ix) => {
+          course.grouped_videos.videos.map((videoObj, ix) => {
             if (ix !== 0) {
               Object.keys(videoObj.bunny_video).map((videoProp) => {
                 if (videoProp !== "title" && videoProp !== "duration") {
@@ -684,7 +689,7 @@ module.exports = {
         course.bought_on = null;
         course.bought_day_diff = null;
 
-        course.videos.map((videoObj) => {
+        course.grouped_videos.videos.map((videoObj) => {
           videoObj.finished_watching = false;
           videoObj.missions = [];
           delete videoObj.users_finished_watching;
@@ -744,7 +749,8 @@ module.exports = {
           .map((r) => r.rate)
           .reduce((prev, curr) => prev + curr, 0) / course.rating.length
       ).toPrecision(2);
-      course.videos.map((vidEntity) => {
+      course.grouped_videos.videos.map((vidEntity) => {
+        console.log(vidEntity);
         delete vidEntity.video;
         delete vidEntity.users_finished_watching;
         vidEntity.missions = [];
@@ -846,7 +852,7 @@ module.exports = {
       let num_of_course_finished = 0;
       let totalDuration = 0;
 
-      course.videos.map((vidEntity, ix) => {
+      course.grouped_videos.videos.map((vidEntity, ix) => {
         let numOfMissions = vidEntity.missions.length;
         let numberOfMissionsFinished = 0;
         vidEntity.duration_seconds = vidEntity.bunny_video.duration;
@@ -882,7 +888,7 @@ module.exports = {
       });
       course.all_videos_finished_duration_seconds = totalDuration;
       course.percentage_course_finished = parseInt(
-        (num_of_course_finished / course.videos.length) * 100
+        (num_of_course_finished / course.grouped_videos.videos.length) * 100
       );
       return course;
     });
