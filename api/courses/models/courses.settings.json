@@ -39,11 +39,6 @@
       "collection": "user",
       "dominant": true
     },
-    "videos": {
-      "type": "component",
-      "repeatable": true,
-      "component": "videos.video"
-    },
     "short_desc": {
       "type": "string",
       "maxLength": 500,
