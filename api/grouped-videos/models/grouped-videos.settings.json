@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "grouped_videos",
+  "info": {
+    "name": "GroupedVideos"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "course_name": {
+      "type": "string"
+    },
+    "videos": {
+      "type": "component",
+      "repeatable": true,
+      "component": "videos.video"
+    },
+    "course": {
+      "via": "grouped_videos",
+      "model": "courses"
+    }
+  }
+}
