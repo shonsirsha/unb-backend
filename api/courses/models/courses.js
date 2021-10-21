@@ -9,16 +9,18 @@ const { default: createStrapi } = require("strapi");
  */
 
 const checkVideos = (data) => {
-  if (data.videos.length > 0) {
-    const ix = data.videos.findIndex((v) => !v.video);
-    const x = data.videos.findIndex((v) => !v.day_title || !v.day_title === "");
-    if (ix !== -1 || x !== -1) {
-      // if a video property without an actual (mux) video found:
-      throw strapi.errors.badRequest("One or more video(s) are incomplete");
-    }
-  } else {
-    throw strapi.errors.badRequest("A course must have a video");
-  }
+  // if (data.bunny_videos.length > 0) {
+  //   const ix = data.bunny_videos.findIndex((v) => !v.video);
+  //   const x = data.bunny_videos.findIndex(
+  //     (v) => !v.day_title || !v.day_title === ""
+  //   );
+  //   if (ix !== -1 || x !== -1) {
+  //     // if a video property without an actual (mux) video found:
+  //     throw strapi.errors.badRequest("One or more video(s) are incomplete");
+  //   }
+  // } else {
+  //   throw strapi.errors.badRequest("A course must have a video");
+  // }
 };
 
 module.exports = {
@@ -37,7 +39,7 @@ module.exports = {
     // },
 
     async beforeCreate(data) {
-      checkVideos(data);
+      // checkVideos(data);
     },
     async afterCreate(data) {
       const course_uuid = uuidv4();
