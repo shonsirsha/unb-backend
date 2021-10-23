@@ -22,6 +22,9 @@
     "course": {
       "via": "course_price",
       "model": "courses"
+    },
+    "crossed_out_price": {
+      "type": "string"
     }
   }
 }

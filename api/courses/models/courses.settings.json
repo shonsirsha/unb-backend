@@ -81,8 +81,8 @@
       "via": "course"
     },
     "course_price": {
-      "model": "price",
-      "via": "course"
+      "via": "course",
+      "model": "price"
     },
     "display_siswa": {
       "type": "boolean",

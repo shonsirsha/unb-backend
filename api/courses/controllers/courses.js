@@ -96,7 +96,6 @@ module.exports = {
       //but it does return paid_users_detail[]
       const exactCourse = await strapi.query("courses").find({ id: course.id });
       const { paid_users, enrolled_users, content_creator } = exactCourse[0];
-      console.log(content_creator);
       // conditional check just for good measure
       if (payer_email === userEmailFromDb) {
         console.log("payer email is user email");
@@ -670,7 +669,6 @@ module.exports = {
           .reduce((prev, curr) => prev + curr, 0) / course.rating.length
       ).toPrecision(2);
       course.grouped_videos.videos.map((vidEntity) => {
-        console.log(vidEntity);
         delete vidEntity.video;
         delete vidEntity.users_finished_watching;
         vidEntity.missions = [];
