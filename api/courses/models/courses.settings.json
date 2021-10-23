@@ -83,6 +83,10 @@
     "course_price": {
       "model": "price",
       "via": "course"
+    },
+    "display_siswa": {
+      "type": "boolean",
+      "default": true
     }
   }
 }
