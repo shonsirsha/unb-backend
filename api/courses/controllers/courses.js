@@ -220,7 +220,6 @@ module.exports = {
           });
         }
       } else {
-        conosle.log("F");
         return ctx.badRequest(null, {
           message: "not found",
         });
@@ -231,84 +230,6 @@ module.exports = {
       });
     }
   },
-  async xenditCbTest(ctx) {
-    // const { payer_email } = ctx.request.body;
-    // mailChimpConfigSetup();
-    // return await toMailchimp(payer_email);
-    // const { external_id } = ctx.request.body;
-    // const pendingPayment = await strapi
-    //   .query("waiting-payment")
-    //   .find({ ex: external_id });
-    // // const { course } = pendingPayment[0];
-    // console.log(pendingPayment);
-    // return;
-    // const user = await strapi.plugins["users-permissions"].services.user.fetch({
-    //   id: pendingPayment[0].user.id,
-    // });
-    // const userEmailFromDb = user.email;
-    // const exactCourse = await strapi.query("courses").find({ id: course.id });
-    // const { paid_users, enrolled_users, content_creator } = exactCourse[0];
-    // const updateCourse = await strapi.query("courses").update(
-    //   { id: course.id },
-    //   {
-    //     paid_users_detail: [
-    //       ...course.paid_users_detail,
-    //       { date: new Date(), user },
-    //     ],
-    //     paid_users: [...paid_users, user],
-    //     enrolled_users: [...enrolled_users, user],
-    //   }
-    // );
-  },
-  // async xenditCbTest(ctx) {
-  //   const { payer_email, external_id } = ctx.request.body;
-  //   const pendingPayment = await strapi
-  //     .query("waiting-payment")
-  //     .find({ ex_id: `${external_id}` });
-  //   if (pendingPayment.length > 0) {
-  //     const { user, course } = pendingPayment[0];
-
-  //     // get this exact course via a standalone query
-  //     // due to pendingPayment not returning enrolled_users[] and paid_users[]
-  //     //but it does return paid_users_detail[]
-  //     const exactCourse = await strapi.query("courses").find({ id: course.id });
-  //     const { paid_users, enrolled_users } = exactCourse[0];
-
-  //     const userEmailFromDb = user.email;
-  //     // just for good measure
-  //     if (payer_email === userEmailFromDb) {
-  //       const updateCourse = await strapi.query("courses").update(
-  //         { id: course.id },
-  //         {
-  //           paid_users_detail: [
-  //             ...course.paid_users_detail,
-  //             { date: new Date(), user },
-  //           ],
-  //           paid_users: [...paid_users, user],
-  //           enrolled_users: [...enrolled_users, user],
-  //         }
-  //       );
-
-  //       if (Object.keys(updateCourse).length > 0) {
-  //         return {
-  //           message: "ok",
-  //         };
-  //       } else {
-  //         return ctx.badRequest(null, {
-  //           message: "Failed updating user and course upon payment",
-  //         });
-  //       }
-  //     } else {
-  //       return ctx.badRequest(null, {
-  //         message: "not found",
-  //       });
-  //     }
-  //   } else {
-  //     return ctx.badRequest(null, {
-  //       message: "not found",
-  //     });
-  //   }
-  // },
 
   async xendit(ctx) {
     // this endpoint does:
@@ -335,8 +256,6 @@ module.exports = {
         message: "invoice can't be issued",
       });
     }
-
-    console.log(detailedCourse);
 
     const redirect_url = `${process.env.FRONTEND_HOST}/redir/${detailedCourse.slug}`;
     const amount = detailedCourse.course_price
@@ -379,7 +298,7 @@ module.exports = {
         user,
         course: { id: courseId },
       });
-      console.log("jmbd");
+      console.log("successful invoice creation");
       return {
         invoice_url: inv.invoice_url,
       };
