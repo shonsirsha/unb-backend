@@ -1,0 +1,21 @@
+{
+  "kind": "singleType",
+  "collectionName": "sitedata",
+  "info": {
+    "name": "sitedata"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "email": {
+      "type": "string"
+    },
+    "whatsapp_number": {
+      "type": "string"
+    }
+  }
+}
