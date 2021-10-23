@@ -16,14 +16,7 @@
         "policies": []
       }
     },
-    {
-      "method": "POST",
-      "path": "/xendit-dada",
-      "handler": "courses.xenditCbTest",
-      "config": {
-        "policies": []
-      }
-    },
+
     {
       "method": "POST",
       "path": "/xendit-callback",
