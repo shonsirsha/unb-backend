@@ -206,6 +206,9 @@ module.exports = {
         .findOne({ username });
 
       if (userWithSameUsername && userWithSameUsername.id != id) {
+        console.log("ASD");
+        console.log(userWithSameUsername);
+        console.log(id);
         return ctx.badRequest(
           null
           // formatError({
@@ -215,6 +218,8 @@ module.exports = {
           // })
         );
       }
+      console.log(userWithSameUsername.id);
+      console.log(id);
     }
 
     if (_.has(ctx.request.body, "email") && advancedConfigs.unique_email) {
