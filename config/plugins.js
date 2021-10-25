@@ -5,9 +5,9 @@ module.exports = ({ env }) => ({
     providerOptions: {
       accessKeyId: env("S3_ACCESS_KEY"),
       secretAccessKey: env("S3_SECRET_ACCESS_KEY"),
-      region: "ap-southeast-1",
+      region: env("S3_REGION"),
       params: {
-        Bucket: "unb-dev",
+        Bucket: env("S3_BUCKET"),
       },
     },
   },
