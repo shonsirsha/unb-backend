@@ -22,9 +22,12 @@ const getVideo = async (data) => {
     throw strapi.errors.badRequest("Video not found on Bunny!");
   } else {
     const resData = await res.json();
+    console.log(resData);
+
     data.title = resData.title;
     data.duration = parseFloat(parseFloat(resData.length) - 1);
     data.thumbnail_name = resData.thumbnailFileName;
+    data.captions = resData.captions;
   }
 };
 
@@ -48,6 +51,7 @@ const updateVideo = async (id, videoId, data) => {
     return {
       title: resData.title,
       thumbnail_name: resData.thumbnailFileName,
+      captions: resData.captions,
     };
   }
 };
@@ -73,13 +77,17 @@ module.exports = {
           let thisVideo = await strapi
             .query("videos")
             .findOne({ id: params.id });
-          const { title, thumbnail_name } = await updateVideo(
+          const { title, thumbnail_name, captions } = await updateVideo(
             params.id,
             thisVideo.video_id,
             data
           );
           data.title = title;
           data.thumbnail_name = thumbnail_name;
+          data.captions = captions.map((co) => ({
+            ...co,
+            bunny_video_id: thisVideo.video_id,
+          }));
         }
       }
     },
