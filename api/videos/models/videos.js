@@ -84,10 +84,7 @@ module.exports = {
           );
           data.title = title;
           data.thumbnail_name = thumbnail_name;
-          data.captions = captions.map((co) => ({
-            ...co,
-            bunny_video_id: thisVideo.video_id,
-          }));
+          data.captions = captions;
         }
       }
     },
