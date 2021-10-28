@@ -35,6 +35,16 @@
       "plugin": "upload",
       "required": false,
       "pluginOptions": {}
+    },
+    "video_1": {
+      "type": "component",
+      "repeatable": false,
+      "component": "video-onboarding.video-1"
+    },
+    "video_2": {
+      "type": "component",
+      "repeatable": false,
+      "component": "video-onboarding.video-2"
     }
   }
 }

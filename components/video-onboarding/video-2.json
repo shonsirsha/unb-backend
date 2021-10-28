@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_video_onboarding_video_2s",
+  "info": {
+    "name": "video_2",
+    "icon": "baby-carriage",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "video": {
+      "model": "videos"
+    }
+  }
+}

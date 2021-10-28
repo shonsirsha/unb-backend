@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_video_onboarding_video_1s",
+  "info": {
+    "name": "video_1",
+    "icon": "bacon"
+  },
+  "options": {},
+  "attributes": {
+    "video": {
+      "model": "videos"
+    }
+  }
+}
