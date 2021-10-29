@@ -15,10 +15,6 @@ const mailChimpConfigSetup = () => {
 
 const toMailchimp = async (user) => {
   const email_address = user.email;
-  console.log(email_address);
-  console.log(user.first_name);
-  console.log(user.last_name);
-  console.log(user.phone_number);
 
   const response = await client.lists.addListMember(
     process.env.MAILCHIMP_LIST_ID,
