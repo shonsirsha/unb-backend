@@ -707,8 +707,10 @@ module.exports = {
         }
         return shouldBeReturned;
       });
+      delete cleanArr.enrolled_users;
       return cleanArr;
     });
+
     return formedArr;
   },
 
@@ -750,7 +752,6 @@ module.exports = {
         course.my_rating = 0;
       }
       delete course.total_rating; // no idea how it's still there
-      delete course.enrolled_users;
       delete course.updated_at;
       delete course.paid_users;
       delete course.paid_users_detail;
@@ -758,6 +759,7 @@ module.exports = {
       delete course.published_at;
       delete course.created_at;
       delete course.updated_at;
+      delete course.enrolled_users;
       if (course.content_creator) {
         delete course.content_creator.created_at;
         delete course.content_creator.updated_at;
