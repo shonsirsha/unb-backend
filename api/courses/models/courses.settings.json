@@ -41,7 +41,6 @@
     },
     "short_desc": {
       "type": "string",
-      "maxLength": 500,
       "required": true
     },
     "enrolled_users": {
