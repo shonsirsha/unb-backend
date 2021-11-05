@@ -40,7 +40,7 @@
       "dominant": true
     },
     "short_desc": {
-      "type": "string",
+      "type": "text",
       "required": true
     },
     "enrolled_users": {
