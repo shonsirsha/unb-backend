@@ -280,6 +280,9 @@ module.exports = {
         description: `Beli kelas ${detailedCourse.title}`,
         failure_redirect_url: redirect_url,
         success_redirect_url: redirect_url,
+        customer: {
+          email,
+        },
       }),
     });
     const inv = await res.json();
